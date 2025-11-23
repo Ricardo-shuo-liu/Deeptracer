@@ -1,4 +1,4 @@
-from agentCoze import agent
+from deeptracer.agentCoze import agent
 
 object = agent.Agent('path1','path2','path3')
 
