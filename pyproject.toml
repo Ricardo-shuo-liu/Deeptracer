@@ -1,12 +1,17 @@
+#基本环境和依赖配置
+
 [build-system]
 requires = ["setuptools>=61.0",
 "wheel"]
 build-backend = "setuptools.build_meta"
 
+#配置项目名以及基本信息
+
 [project]
 name = "deeptracer"
 version = "0.1.0"
 
+#配置deeptracer主模块搜索
 
 [tool.setuptools.packages.find]
 where = ["."]
