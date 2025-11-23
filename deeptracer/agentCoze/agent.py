@@ -34,7 +34,7 @@ class Agent():
         self.svgPath  = svgPath
         self.pyPath = pyPath
     
-    def contection(self,configPath:str = "agentCoze/.env.local")->str:
+    def contection(self,configPath:str = "deeptracer/agentCoze/.env.local")->str:
         """
         连接逻辑，实现与
 
