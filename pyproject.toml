@@ -1,18 +1,23 @@
 #基本环境和依赖配置
 
 [build-system]
-requires = ["setuptools>=61.0",
-"wheel"]
+requires = ["setuptools>=61.0","wheel"]
 build-backend = "setuptools.build_meta"
-
 #配置项目名以及基本信息
 
 [project]
 name = "deeptracer"
+
 version = "0.1.0"
 
-#配置deeptracer主模块搜索
+requires-python = ">3.10.9"
 
+dependencies = [
+    "cozepy>=0.20.0 ",
+    "python-dotenv>=1.2.1",
+]
+
+#配置deeptracer主模块搜索
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["deeptracer*"]
