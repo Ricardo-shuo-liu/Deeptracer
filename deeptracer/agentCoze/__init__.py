@@ -1,6 +1,6 @@
-from .agent import Agent
+from . import agent
 
 
 __all__ = [
-    "Agent",
+    "agent",
 ]
