@@ -297,7 +297,7 @@ def exec_file_and_pretty_print(mainpyfile):
   import pprint
 
   if not os.path.exists(mainpyfile):
-    print 'Error:', mainpyfile, 'does not exist'
+    print('Error:', mainpyfile, 'does not exist')
     sys.exit(1)
 
   def pretty_print(output_lst):

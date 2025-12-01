@@ -51,7 +51,7 @@ def encode(dat, ignore_id=False):
   def encode_helper(dat, compound_obj_ids):
     # primitive type
     if dat is None or \
-       type(dat) in (int, long, float, str, bool):
+       type(dat) in (int, float, str, bool):
       return dat
     # compound type
     else:
