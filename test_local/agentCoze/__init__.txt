@@ -90,3 +90,8 @@ __all__ = [
     "is_color_supported",
     "print_color"
 ]
+
+============================================================
+(Deeptracer) ricaedo@ricaedo-Legion-Y9000P-IRX9:~/Deeptracer$ /home/ricaedo/下载/yes/envs/Deeptracer/bin/python /home/ricaedo/Deeptracer/deeptracer/agentCoze/__init__.py
+green_color
+(ps：注意这里会显示绿色！如果系统不支持会显示正常颜色)
