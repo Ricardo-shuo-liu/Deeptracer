@@ -1,3 +1,6 @@
+#本代码验证需要在Deeptracer目录下执行
+#python -m deeptracer.agentCoze.agent
+#否则无法识别定义在__init__ 的函数实现输出美化
 from cozepy import (
     Coze,
     TokenAuth,
@@ -365,3 +368,25 @@ class Agent():
         messgae = "\n".join(message_texts)
         return messgae
         #拼接信息
+
+if __name__ == "__main__":
+    #get_env_messgae.get_coze_api_token()
+    get_env_messgae.get_coze_user_id()
+    get_env_messgae.get_coze_api_base()
+    get_env_messgae.get_coze_bot_id()
+=======================================================================
+(Deeptracer) ricaedo@ricaedo-Legion-Y9000P-IRX9:~/Deeptracer$ python -m deeptracer.agentCoze.agent
+请输入用户id(只能以字母,数字和下划线构成)://
+输入错误!请在1s后重新试!
+1请输入用户id(只能以字母,数字和下划线构成)123
+输入成功!
+Traceback (most recent call last):
+  File "/home/ricaedo/下载/yes/envs/Deeptracer/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/ricaedo/下载/yes/envs/Deeptracer/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/ricaedo/Deeptracer/deeptracer/agentCoze/agent.py", line 373, in <module>
+    get_env_messgae.get_coze_bot_id()
+  File "/home/ricaedo/Deeptracer/deeptracer/agentCoze/agent.py", line 102, in get_coze_bot_id
+    assert coze_bot_id, "Waring!Can't find coze_bot_id from env! Please check and add it!"
+AssertionError: Waring!Can't find coze_bot_id from env! Please check and add it!
