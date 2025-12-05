@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 88 # 设置最大行长度为88个字符
+extend-ignore = E203, W503 #忽略特定代码风格：空格前的逗号和操作符换行
+# 排除不需要检查的目录
+exclude =
+    .git
+    __pycache__
+    build
+    dist
+    .venv
+    venv
+    test
+    test_local
+    deeptracer/viztracer_source_config/tests
