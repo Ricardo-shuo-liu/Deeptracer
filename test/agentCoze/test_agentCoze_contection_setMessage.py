@@ -1,15 +1,15 @@
-from deeptracer.agentCoze import agent
+from deeptracer.agentCoze import Agent
 
 def _a_error():
-    object = agent.Agent('path1','path2','path3',"path4")
+    object = Agent('path1','path2','path3',"path4")
     #这里只负责占位置 没有真实存在 会报错
     msgs = object.setMessage()
     print(msgs)
 def _a_successful():
-    object = agent.Agent("test_local/agentCoze/agent.txt",
-                        "test_local/agentCoze/agent.txt",
-                        "test_local/agentCoze/agent.txt",
-                        "test_local/agentCoze/agent.txt")
+    object = Agent("test_local/agentCoze/agent.txt",
+                    "test_local/agentCoze/agent.txt",
+                    "test_local/agentCoze/agent.txt",
+                    "test_local/agentCoze/agent.txt")
     #这里真实存在 测试能不能正常连接
     msgs = object.setMessage()
     print(msgs)
