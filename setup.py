@@ -7,9 +7,9 @@ setup(
     name="deeptracer",
     version="0.1.0",
     packages=find_packages(),
-    install_requires = [
+    install_requires=[
         "cozepy>=0.20.0",
-        "python-dotenv>=1.2.1"
+        "python-dotenv>=1.2.1",
     ],
-    test_suite = "test"
+    test_suite="test",
 )
