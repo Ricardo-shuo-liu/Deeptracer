@@ -1,4 +1,4 @@
-from deeptracer import agentCoze
+from deeptracer import print_color
 
-agentCoze.print_color("This will print a red string if your system is Ok",
+print_color("This will print a red string if your system is Ok",
                       fore_color="red")

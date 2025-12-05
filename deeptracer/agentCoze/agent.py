@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 import re
 import time
-from . import print_color
+from deeptracer import print_color
 from dotenv import load_dotenv
 import uuid
 class get_env_messgae():
