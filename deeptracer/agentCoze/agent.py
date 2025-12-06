@@ -403,8 +403,8 @@ class Agent():
             print_color(f"{file_type} 文件上传成功,ID:{id}", fore_color="green")
         return ids
     def setMessage(self,
+                   prompt:str=None,
                    prompt_path:str="deeptracer/agentCoze/prompt/ default_prompt.txt",
-                   prompt:str=None
                    )->str:
         """
         智能体的交流
