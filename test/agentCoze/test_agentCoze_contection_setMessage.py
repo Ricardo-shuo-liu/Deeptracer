@@ -6,10 +6,10 @@ def _a_error():
     msgs = object.setMessage()
     print(msgs)
 def _a_successful():
-    object = Agent("test_local/agentCoze/agent.txt",
-                    "test_local/agentCoze/agent.txt",
-                    "test_local/agentCoze/agent.txt",
-                    "test_local/agentCoze/agent.txt")
+    object = Agent("test.txt",
+                    "test.txt",
+                    "test.txt",
+                    "test.txt")
     #这里真实存在 测试能不能正常连接
     msgs = object.setMessage()
     print(msgs)
