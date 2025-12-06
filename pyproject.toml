@@ -23,13 +23,3 @@ dependencies = [
 where = ["."]
 include = ["deeptracer*"]
 
-[project.optional-dependencies]
-# 开发依赖，使用 `pip install .[dev]` 或 `pip install -e .[dev]`
-dev = [
-    "pytest>=7.0",
-    "pytest-cov",
-    "flake8",
-    "pre-commit",
-    "black==24.1.0",
-    "isort==5.12.0",
-]
