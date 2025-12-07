@@ -1,0 +1,654 @@
+{
+  "traceEvents": [
+    {
+      "name": "func1",
+      "cat": "function",
+      "ph": "B",
+      "ts": 1620000000000,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["func1", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000000100,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__init__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000000200,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000000300,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000000400,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000000500,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000000600,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000000700,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000000800,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000000900,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000001000,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000001100,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000001200,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000001300,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000001400,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000001500,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000001600,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000001700,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000001800,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000001900,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000002000,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000002100,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__add__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000002200,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000002300,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__add__", "func1", "main"]
+      }
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000002400,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "func1",
+      "cat": "function",
+      "ph": "E",
+      "ts": 1620000002500,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "func2",
+      "cat": "function",
+      "ph": "B",
+      "ts": 1620000002600,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["func2", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000002700,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__init__", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000002800,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000002900,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000003000,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000003100,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000003200,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000003300,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000003400,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "func1",
+      "cat": "function",
+      "ph": "B",
+      "ts": 1620000003500,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000003600,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__init__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000003700,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000003800,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000003900,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000004000,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000004100,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000004200,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000004300,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000004400,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000004500,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000004600,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000004700,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000004800,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000004900,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000005000,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000005100,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000005200,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000005300,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000005400,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__setitem__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__setitem__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000005500,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000005600,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__add__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000005700,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000005800,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__add__", "func1", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__add__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000005900,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "func1",
+      "cat": "function",
+      "ph": "E",
+      "ts": 1620000006000,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "B",
+      "ts": 1620000006100,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["list.__init__", "func2", "main"]
+      }
+    },
+    {
+      "name": "list.__init__",
+      "cat": "internal",
+      "ph": "E",
+      "ts": 1620000006200,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "min",
+      "cat": "built-in",
+      "ph": "B",
+      "ts": 1620000006300,
+      "pid": 12345,
+      "tid": 67890,
+      "args": {
+        "stack": ["min", "func2", "main"]
+      }
+    },
+    {
+      "name": "min",
+      "cat": "built-in",
+      "ph": "E",
+      "ts": 1620000006400,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "func2",
+      "cat": "function",
+      "ph": "E",
+      "ts": 1620000006500,
+      "pid": 12345,
+      "tid": 67890
+    },
+    {
+      "name": "main",
+      "cat": "function",
+      "ph": "E",
+      "ts": 1620000006600,
+      "pid": 12345,
+      "tid": 67890
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "startTime": 1620000000000,
+    "endTime": 1620000006600,
+    "processes": {
+      "12345": {
+        "name": "python",
+        "threads": {
+          "67890": {
+            "name": "MainThread"
+          }
+        }
+      }
+    }
+  }
+}
