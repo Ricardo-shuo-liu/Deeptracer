@@ -11,6 +11,5 @@ exclude =
     venv
     test
     test_local
-    deeptracer/viztracer_source_config/tests
-    deeptracer/tutor
-    deeptracer/tutor
+    deeptracer/viztracer_source_config
+    deeptracer/tutor_source_config
