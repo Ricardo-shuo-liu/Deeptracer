@@ -15,3 +15,23 @@ def test_agent_structure():
     import os
     agent_file_path = os.path.join('deeptracer', 'agentCoze', 'agent.py')
     assert os.path.exists(agent_file_path), f"Agent文件不存在: {agent_file_path}"
+
+def test_agent_function():
+    from deeptracer.agentCoze import Agent
+    # coze = Agent(
+    #     jsonPath="test/test_sources/result.json",
+    #     svgPath="test/test_sources/cpu_profile.svg",
+    #     pyPath="test/test_sources/test.py",
+    #     txtPath="test/test_sources/ast.txt"
+    # )
+    coze = Agent(
+        "test.txt",
+        "test.txt",
+        "test.txt",
+        "test.txt"
+    )
+    msgs = coze.setMessage()
+    print(msgs)
+
+if __name__ == "__main__":
+    test_agent_function()

@@ -4,7 +4,6 @@ from cozepy import (
     COZE_CN_BASE_URL,
     Message,
     DeviceOAuthApp,
-    File,
     MessageObjectString
     )
 from deeptracer import DEEPTRACER_DEV_ROOT
@@ -16,7 +15,8 @@ import re
 import time
 from deeptracer import print_color
 from dotenv import load_dotenv
-import uuid
+import shutil
+import tempfile
 class get_env_messgae():
     """
     
@@ -32,7 +32,7 @@ class get_env_messgae():
     """
 
 
-    def __init__(self):
+    def __init__(self)->None:
         pass
     @classmethod
     def get_coze_api_token(self,
@@ -142,7 +142,113 @@ class get_env_messgae():
             return True
         return False 
     
+class _fileChange():
+    """
+    封装文件转换功能
 
+    Args:
+        None
+    Attributes:
+        None
+    
+    Methods:
+        None
+    """
+    def __init__(self)->None:
+        pass
+    def _toTxt(self,
+               filePath:str,
+               savePath:str="deeptracer/agentCoze/activityFilesTXT"
+               )->str:
+        """
+        实现文件copy成txt文件
+        
+        Args:
+            filePath(str):文件路径
+        Returns:
+            txtPath(str):copy后文件路径
+        """
+        if not os.path.exists(os.path.join(DEEPTRACER_DEV_ROOT,savePath)):
+            os.mkdir(os.path.join(DEEPTRACER_DEV_ROOT,savePath))
+        #检验缓存空间是不是存在
+        findally_path = self._change(filePath,
+                                    savePath)
+        return findally_path
+    def _change(self,
+                filePath,
+                save_path:str)->str:
+        """
+        实现判别类型并且创建附件对象实现标注
+
+        Args:
+            type(str):文件类型
+            name(str):文件名称(剔除后缀)
+            save_path(str):保存的文件夹路径
+        Returns:
+            dst_path(str):附件路径
+        """
+        filePathType = Path(filePath).suffix
+        
+        filePathName = Path(filePath).stem
+        if filePathType!=".py":
+            src_path = os.path.join(DEEPTRACER_DEV_ROOT,filePath)
+        else:
+            src_path = filePath
+        dst_path = os.path.join(DEEPTRACER_DEV_ROOT,
+                                save_path,
+                                filePathName + ".txt")
+        match filePathType:
+            case ".py":
+                FORMAT_MARK = "#PYTHON"
+                self._contentChange(src_path=src_path,
+                                    dst_path=dst_path,
+                                    FORMAT_MARK=FORMAT_MARK
+                                    )
+            case ".json":
+                FORMAT_MARK = "#JSON"
+                self._contentChange(src_path=src_path,
+                                    dst_path=dst_path,
+                                    FORMAT_MARK=FORMAT_MARK
+                                    )
+            case ".svg":
+                FORMAT_MARK = "#XML"
+                self._contentChange(src_path=src_path,
+                                    dst_path=dst_path,
+                                    FORMAT_MARK=FORMAT_MARK
+                                    )
+            case ".txt":
+                FORMAT_MARK = "#TXT"
+                self._contentChange(src_path=src_path,
+                                    dst_path=dst_path,
+                                    FORMAT_MARK=FORMAT_MARK
+                                    )
+            case _:
+                raise "文件传入失败！"
+            
+        return dst_path
+    def _contentChange(self,
+                       src_path:str,
+                       dst_path:str,
+                       FORMAT_MARK:str="#TXT")->None:
+        """
+        实现对文件的标注
+        
+        Args:
+            src_path(str):原文件路径
+            dst_path(str):标注后txt文件路径
+            FORMAT_MARK(str):标注信息
+        Returns:
+            None
+        """
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as temp_f:
+        # 写入首行标识
+            temp_f.write(f"{FORMAT_MARK}\n")
+            with open(src_path, "r", encoding="utf-8", newline="") as src_f:
+                shutil.copyfileobj(src_f, temp_f)
+        #拷贝内容
+
+        shutil.move(temp_f.name, dst_path)
+        #实现命名
 class Agent():
     """
     建立智能体对象,实现支持连接到远端API的功能管理
@@ -164,7 +270,9 @@ class Agent():
                  svgPath:str,
                  pyPath:str,
                  txtPath:str,
-                 configPath:str = "deeptracer/agentCoze/.env.local")->None:
+                 configPath:str = "deeptracer/agentCoze/.env.local",
+                 cachePath:str = "deeptracer/agentCoze/activityFilesTXT"
+                 )->None:
         """
         初始化函数,实现对象的基本参数逻辑的定义
 
@@ -179,12 +287,16 @@ class Agent():
         config_Path = os.path.join(DEEPTRACER_DEV_ROOT,configPath)
         load_dotenv(config_Path)#配置环境变量
 
+        fileF = _fileChange()
         self.files_paths = {
-            "json":os.path.join(DEEPTRACER_DEV_ROOT,jsonPath),
-            "svg":os.path.join(DEEPTRACER_DEV_ROOT,svgPath),
-            "python": pyPath,
-            "txt":os.path.join(DEEPTRACER_DEV_ROOT,txtPath)
+            "json":fileF._toTxt(jsonPath,cachePath),
+            "xml":fileF._toTxt(svgPath,cachePath),
+            "python": fileF._toTxt(pyPath,cachePath),
+            "txt":fileF._toTxt(txtPath,cachePath)
         }
+        for pathtype,path in self.files_paths.items():
+            print(path)
+        self.cachePath = cachePath
         #配置基础文件路径 用于智能体读取
     def _validate_file(self):
         """
@@ -291,8 +403,8 @@ class Agent():
             print_color(f"{file_type} 文件上传成功,ID:{id}", fore_color="green")
         return ids
     def setMessage(self,
+                   prompt:str=None,
                    prompt_path:str="deeptracer/agentCoze/prompt/ default_prompt.txt",
-                   prompt:str=None
                    )->str:
         """
         智能体的交流
@@ -325,9 +437,12 @@ class Agent():
                 bot_id=self.bot_id,
                 user_id=self.user_id,
                 additional_messages=[user_message],
-                poll_timeout=6
+                poll_timeout=600
             )
             msgs = getattr(result,"messages",[])
+            self._remove_cache(os.path.join(DEEPTRACER_DEV_ROOT,
+                                            self.cachePath))
+            #清理传递过程中产生的缓存文件
             return self.messageDraw(msgs)
         except Exception as e:
             raise RuntimeError(f"发送分析请求失败：{str(e)}")
@@ -347,6 +462,29 @@ class Agent():
             MessageObj = MessageObjectString.build_file(file_id=id)
             MessageObjList.append(MessageObj)
         return MessageObjList
+    def _remove_cache(self,
+                      cachePath:str)->None:
+        """
+        清理存放txt文件的文件夹
+
+        Args:
+            cachePath(str):存放地址
+        Returns:
+            None
+        """
+        print_color("开始清理缓存",fore_color="blue")
+        if os.path.exists(cachePath):
+            try:
+                # 直接删除非空文件夹（核心函数）
+                shutil.rmtree(cachePath)
+                print_color(f"程序缓存清理成功"
+                            ,fore_color="green")
+            except Exception as e:
+                print_color(f"程序缓存清理失败",
+                            fore_color="red")
+        else:
+            print_color("状态良好无需清理!",
+                        fore_color="green")
     def messageDraw(self,msgs:list)->str:
         """
         将从环境变量中获得的Message列表转化为python字符串
