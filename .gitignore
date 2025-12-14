@@ -1,165 +1,99 @@
 # ========== Python编译文件 ==========
-# Python编译后的字节码文件目录
+# 忽略Python自动生成的字节码文件和目录
 __pycache__/
-# Python编译后的字节码文件
 *.py[cod]
-# Python编译后的字节码文件（旧格式）
 *$py.class
 
 # ========== C扩展文件 ==========
-# C语言扩展模块
 *.so
 
 # ========== 打包和分发文件 ==========
-# Python虚拟环境的Python解释器链接
+# 忽略各种打包和分发相关文件
 .Python
-# 构建目录
 build/
-# 开发鸡蛋目录
 develop-eggs/
-# 分发目录
 .dist/
-# 下载目录
 downloads/
-# 鸡蛋目录
 eggs/
-# 鸡蛋目录（另一种形式）
 .eggs/
-# 库目录
 lib/
-# 64位库目录
 lib64/
-# 构建部件目录
 parts/
-# 源代码分发目录
 sdist/
-# 变量目录
 var/
-# 轮子目录
 wheels/
-# 鸡蛋信息目录
 *.egg-info/
-# 安装配置文件
 .installed.cfg
-# 鸡蛋文件
 *.egg
-# 清单文件
+# 注：*.egg和*.egg-info是Python早期包分发格式，现已被wheel替代
 MANIFEST
 
 # ========== PyInstaller相关文件 ==========
-# PyInstaller生成的清单文件
 *.manifest
-# PyInstaller规格文件
 *.spec
 
 # ========== 安装日志 ==========
-# pip安装日志
 pip-log.txt
-# pip删除目录日志
 pip-delete-this-directory.txt
 
 # ========== 单元测试和覆盖率报告 ==========
-# HTML格式的覆盖率报告
+# 忽略测试和覆盖率生成的文件
 htmlcov/
-# tox测试环境
 .tox/
-# nox测试环境
 .nox/
-# 覆盖率数据文件
 .coverage
-# 覆盖率数据文件（带后缀）
 .coverage.*
-# 缓存目录
 .cache
-# nose测试XML报告
 nosetests.xml
-# 覆盖率XML报告
 coverage.xml
-# 覆盖率文件
 *.cover
-# hypothesis测试库的缓存
 .hypothesis/
-# pytest测试框架的缓存
 .pytest_cache/
 
 # ========== 翻译文件 ==========
-# 已编译的翻译文件
 *.mo
-# 翻译模板文件
 *.pot
 
-# ========== Django框架相关文件 ==========
-# 日志文件
+# ========== 框架相关文件 ==========
+# Django
 *.log
-# 本地设置文件
 local_settings.py
-# SQLite数据库文件
 db.sqlite3
-
-# ========== Flask框架相关文件 ==========
-# Flask实例目录
+# Flask
 instance/
-# Flask静态资源缓存
 .webassets-cache
-
-# ========== Scrapy框架相关文件 ==========
-# Scrapy项目配置目录
+# Scrapy
 .scrapy
 
-# ========== Sphinx文档构建文件 ==========
-# Sphinx文档构建目录
+# ========== 文档构建文件 ==========
 docs/_build/
-
-# ========== PyBuilder相关文件 ==========
-# PyBuilder目标目录
 target/
 
-# ========== Jupyter Notebook相关文件 ==========
-# Jupyter笔记本检查点
-.ipynb_checkpoints
-
-# ========== IPython相关文件 ==========
-# IPython配置文件目录
+# ========== Jupyter/IPython ==========
+.ipynb_checkpoints/
 profile_default/
-# IPython配置文件
 ipython_config.py
 
-# ========== pyenv版本控制 ==========
-# pyenv版本文件
+# ========== 环境和版本控制 ==========
 .python-version
-
-# ========== Celery定时任务 ==========
-# Celery定时任务调度文件
 celerybeat-schedule
-
-# ========== SageMath解析文件 ==========
-# SageMath解析后的Python文件
 *.sage.py
 
 # ========== 虚拟环境 ==========
-# 环境变量文件
+# 忽略虚拟环境目录（非常重要，避免提交环境依赖）
 .env
-# 虚拟环境目录（Python官方推荐）
 .venv
-# 虚拟环境目录（常用）
 env/
-# 虚拟环境目录（常用）
 venv/
-# 虚拟环境目录（大写）
 ENV/
-# 虚拟环境备份目录
 env.bak/
-# 虚拟环境备份目录
 venv.bak/
 
-# ========== Visual Studio Code ==========
-# VS Code配置目录
+# ========== IDE和编辑器 ==========
+# VS Code配置
 .vscode/
 
-# ========== Windows系统文件 ==========
-# Windows缩略图缓存
+# ========== 系统文件 ==========
+# Windows和Mac系统生成的文件
 Thumbs.db
-
-# ========== Mac系统文件 ==========
-# Mac系统隐藏文件
 .DS_Store
