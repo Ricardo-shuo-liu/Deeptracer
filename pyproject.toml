@@ -15,7 +15,7 @@ requires-python = ">3.10.9"
 dependencies = [
     "cozepy>=0.20.0 ",
     "python-dotenv>=1.2.1",
-    "objprint>=0.3.0"
+    "objprint>=0.3.0",
     "memray>=1.19.1 "
 ]
 
