@@ -4,11 +4,12 @@ from cozepy import (
     COZE_CN_BASE_URL,
     Message,
     DeviceOAuthApp,
-    MessageObjectString
+    MessageObjectString,
+    ChatEventType,
+    ChatPoll
     )
 from deeptracer import DEEPTRACER_DEV_ROOT
 import os
-import sys
 from pathlib import Path
 from typing import Optional
 import re
@@ -17,6 +18,8 @@ from deeptracer import print_color
 from dotenv import load_dotenv
 import shutil
 import tempfile
+import threading
+from tqdm.auto import tqdm
 class get_env_messgae():
     """
     
@@ -101,6 +104,20 @@ class get_env_messgae():
         coze_bot_id = os.getenv("COZE_BOT_ID")
         assert coze_bot_id, "Waring!Can't find coze_bot_id from env! Please check and add it!"
         return coze_bot_id
+    @classmethod
+    def get_coze_workflow_id(self):
+        """
+        从环境变量中获得coze_workflow_id
+
+        Args:
+            None
+        Returns:
+            coze_workflow_id(str):coze的云端的workflow_id
+
+        """
+        coze_workflow_id = os.getenv("COZE_WORKFLOW_ID")
+        assert coze_workflow_id, "Waring!Can't find coze_workflow_id from env! Please check and add it!"
+        return coze_workflow_id
     @classmethod
     def get_coze_user_id(self):
         """
@@ -249,7 +266,7 @@ class _fileChange():
 
         shutil.move(temp_f.name, dst_path)
         #实现命名
-class Agent():
+class Flow():
     """
     建立智能体对象,实现支持连接到远端API的功能管理
     
@@ -266,12 +283,13 @@ class Agent():
     
     """
     def __init__(self,
-                 jsonPath:str,
-                 svgPath:str,
                  pyPath:str,
-                 txtPath:str,
-                 configPath:str = "deeptracer/agentCoze/.env.local",
-                 cachePath:str = "deeptracer/agentCoze/activityFilesTXT"
+                 jsonPath:str=None,
+                 svgPath:str=None,
+                 txtPath:str=None,
+                 open:bool=False,
+                 configPath:str = "deeptracer/workflow/.env.local",
+                 cachePath:str = "deeptracer/workflow/activityFilesTXT"
                  )->None:
         """
         初始化函数,实现对象的基本参数逻辑的定义
@@ -284,19 +302,30 @@ class Agent():
         Returns:
             None
         """
+        self.open = open
+
+        self._REQUEST_DONE = False
         config_Path = os.path.join(DEEPTRACER_DEV_ROOT,configPath)
         load_dotenv(config_Path)#配置环境变量
-
-        fileF = _fileChange()
-        self.files_paths = {
-            "json":fileF._toTxt(jsonPath,cachePath),
-            "xml":fileF._toTxt(svgPath,cachePath),
-            "python": fileF._toTxt(pyPath,cachePath),
-            "txt":fileF._toTxt(txtPath,cachePath)
-        }
-        for pathtype,path in self.files_paths.items():
-            print(path)
-        self.cachePath = cachePath
+        if self.open:
+            fileF = _fileChange()
+            self.files_paths = {
+                "json":fileF._toTxt(jsonPath,cachePath),
+                "xml":fileF._toTxt(svgPath,cachePath),
+                "python": fileF._toTxt(pyPath,cachePath),
+                "txt":fileF._toTxt(txtPath,cachePath)
+            }
+            self._validate_file()
+            for pathtype,path in self.files_paths.items():
+                print(path)
+            self.cachePath = cachePath
+        else:
+            if os.path.exists(pyPath):
+                self.pyPath = pyPath
+            else:
+                raise FileNotFoundError(
+                f"以下文件不存在：{pyPath}"
+                )
         #配置基础文件路径 用于智能体读取
     def _validate_file(self):
         """
@@ -313,7 +342,7 @@ class Agent():
             if not os.path.exists(file_path):
                 error_type.append(f"{file_type}类型的路径{file_path}")
         
-        if not error_type:
+        if  error_type:
             newline = '\n'
             raise FileNotFoundError(
                 f"以下文件不存在：{newline}{newline.join(error_type)}"
@@ -334,6 +363,7 @@ class Agent():
         coze_api_token = get_env_messgae.get_coze_api_token()
         self.bot_id = get_env_messgae.get_coze_bot_id()
         self.user_id = get_env_messgae.get_coze_user_id()
+        self.workflow_id = get_env_messgae.get_coze_workflow_id()
         base_url = get_env_messgae.get_coze_api_base()
         #从环境变量中获得基本参数信息
 
@@ -402,12 +432,12 @@ class Agent():
             ids.append(id)
             print_color(f"{file_type} 文件上传成功,ID:{id}", fore_color="green")
         return ids
-    def setMessage(self,
+    def _setMessage_flow(self,
                    prompt:str=None,
-                   prompt_path:str="deeptracer/agentCoze/prompt/ default_prompt.txt",
+                   prompt_path:str="deeptracer/workflow/prompt/ default_prompt.txt",
                    )->str:
         """
-        智能体的交流
+        工作流的交流
 
         Args:
             None
@@ -417,6 +447,7 @@ class Agent():
         """
         
         cozeobject = self.contection()
+        conversation  = cozeobject.conversations.create()
         file_ids = self.upload_batch_file(cozeobject)
         MessageObjList = self._ids_to_Messgae(ids=file_ids)
         default_prompt_path = os.path.join(DEEPTRACER_DEV_ROOT,prompt_path)
@@ -433,20 +464,126 @@ class Agent():
         # 关联上传的文件 ID
         try:
             print_color("开始连接云端智能体请求分析",fore_color="blue")
-            result = cozeobject.chat.create_and_poll(
+            msgs = []
+            for event in cozeobject.workflows.chat.stream(
+                workflow_id=self.workflow_id,
                 bot_id=self.bot_id,
-                user_id=self.user_id,
+                conversation_id=conversation.id,
                 additional_messages=[user_message],
                 poll_timeout=600
-            )
-            msgs = getattr(result,"messages",[])
+            ):
+                if event.event == ChatEventType.CONVERSATION_MESSAGE_DELTA: 
+                    if hasattr(event.message, 'content') and event.message.content:
+                        msgs.append(event.message)
+                # 处理调用完成
+                elif event.event == ChatEventType.CONVERSATION_CHAT_COMPLETED:
+                    print_color("云端分析完成", fore_color="green")
+                    print_color(f"token usage:{event.chat.usage.token_count}",
+                                fore_color="green")
+                    break
             self._remove_cache(os.path.join(DEEPTRACER_DEV_ROOT,
                                             self.cachePath))
             #清理传递过程中产生的缓存文件
             return self.messageDraw(msgs)
         except Exception as e:
             raise RuntimeError(f"发送分析请求失败：{str(e)}")
+    def _setMessage_agent(self,
+                   prompt:str=None,
+                   prompt_path:str="deeptracer/workflow/prompt/default_prompt.txt",
+                   )->str:
+        """
+        智能体的交流
+
+        Args:
+            None
         
+        Return :
+            msgs(str):返回修改后的完成代码以及其相对解释
+        """
+        
+        cozeobject = self.contection()
+        #得到coze对象实现一次调用函数直接发送信息
+        with open(self.pyPath,"r") as fb:
+            orcode = fb.read()
+        user_message = Message.build_user_question_objects(
+            [
+                MessageObjectString.build_text(orcode),
+            ]
+        )
+        try:
+            print_color("开始连接云端智能体请求分析",fore_color="blue")
+            
+            req_thread = threading.Thread(
+            target=self._send,
+            args=(cozeobject, 
+                  user_message),
+            daemon=True  # 守护线程，主线程退出时自动结束
+        )
+            req_thread.start()
+            self._show_progress_bar(estimated_total=60)
+            req_thread.join()
+            print_color("云端智能体已经分析完毕！",fore_color="green")
+            msgs = getattr(self.result,"messages",[])
+            #清理传递过程中产生的缓存文件
+            return self.messageDraw(msgs)
+        except Exception as e:
+            raise RuntimeError(f"发送分析请求失败：{str(e)}")
+    def _send(self,
+              cozeobject:Coze,
+              user_message:Message)->ChatPoll:
+        """
+        设置发信息功能用于多线程实现进度表
+        
+        Args:
+            cozeobject(Coze):coze对象
+            user_message(Message):用户信息封装
+
+        Returns:
+            result(ChatPoll):信息对象
+        """
+        try:
+            self.result =  cozeobject.chat.create_and_poll(
+                    user_id=self.user_id,
+                    bot_id=self.bot_id,
+                    additional_messages=[user_message],
+                    poll_timeout=600
+                )
+        except Exception as e:
+            raise RuntimeError(f"发送分析请求失败: {str(e)}")
+        finally:
+            self._REQUEST_DONE = True
+        
+    def _show_progress_bar(self, 
+                           estimated_total:int=60)->None:
+        """
+        主线程显示进度条（内部方法）
+        
+        Args:
+            estimated_total(int): 预估总时长(秒)
+        
+        Returns:
+            None
+        """
+        pbar = tqdm(total=100, desc="智能体分析进度", ncols=80, colour="green")
+        progress = 0
+        step = 99 / estimated_total  # 每秒推进到99%的步长
+
+        # 阶段1：按预估时间推进到99%
+        while progress < 99 and not self._REQUEST_DONE:
+            progress += step
+            progress = min(progress, 99)  # 防止超过99%
+            update_num = int(progress) - pbar.n
+            if update_num > 0:
+                pbar.update(update_num)
+            time.sleep(1)
+
+        # 阶段2：卡在99%，直到请求完成
+        while not self._REQUEST_DONE:
+            time.sleep(0.1)  # 减少轮询消耗
+
+        # 阶段3：请求完成，跳转到100%
+        pbar.update(100 - pbar.n)
+        pbar.close()
     def _ids_to_Messgae(self,
                         ids:list[str])->list[MessageObjectString]:
         """
@@ -503,3 +640,26 @@ class Agent():
         messgae = "\n".join(message_texts)
         return messgae
         #拼接信息
+    def setMessage(self,
+                   prompt:str=None,
+                   prompt_path:str="deeptracer/workflow/prompt/default_prompt.txt")->str:
+        
+        """
+        交流节点
+
+        Args:
+            None
+        
+        Return :
+            result(str):返回修改后的完成代码以及其相对解释
+        """
+        if self.open:
+            result = self._setMessage_flow(prompt=prompt,
+                                  prompt_path=prompt_path)
+        else:
+            result = self._setMessage_agent(
+                prompt=prompt,
+                prompt_path=prompt_path
+            )
+        return result
+        

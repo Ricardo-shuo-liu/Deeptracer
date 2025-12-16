@@ -7,8 +7,6 @@ deeptracer.egg-info/SOURCES.txt
 deeptracer.egg-info/dependency_links.txt
 deeptracer.egg-info/requires.txt
 deeptracer.egg-info/top_level.txt
-deeptracer/agentCoze/__init__.py
-deeptracer/agentCoze/agent.py
 deeptracer/tutor/advanced/map.py
 deeptracer/tutor/math/newton.py
 deeptracer/tutor/oop/oop_demo.py
@@ -131,3 +129,5 @@ deeptracer/viztracer_source_config/tests/modules/dummy_vizplugin_wrong.py
 deeptracer/viztracer_source_config/tests/modules/issue160.py
 deeptracer/viztracer_source_config/tests/modules/issue58.py
 deeptracer/viztracer_source_config/tests/modules/issue83.py
+deeptracer/workflow/__init__.py
+deeptracer/workflow/flow.py

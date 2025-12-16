@@ -1,5 +1,89 @@
 import os
 import sys
+import platform
+import subprocess
+
+
+def is_color_supported()->bool:
+    """
+    检测当前环境是否支持颜色输出
+    
+    Args:
+        None
+    Return:
+        result(bool):判断是不是支持颜色输出
+    """
+    #先判断是否为交互式终端
+    if not sys.stdout.isatty():
+        return False
+    #先判断是否是Windows
+    if sys.platform.startswith("win"):
+        # Windows系统：检查版本是否≥10.0.10586
+        try:
+            # 获取Windows版本号
+            win_version = platform.version()
+            major, minor, build = map(int, win_version.split("."))
+            # Windows 10及以上且版本号≥10586才支持ANSI
+            return (major >= 10 and build >= 10586)
+        except:
+            return False
+    else:
+        # 非Windows系统：检查终端是否是交互式且支持颜色
+        try:
+            # 用tput检测颜色支持（Linux/macOS）
+            result = subprocess.check_output(["tput", "colors"], stderr=subprocess.DEVNULL)
+    # tput 输出是字节串，转成整数
+            color_count = int(result.strip())
+            is_color_supported = color_count >= 8  # 通常 >=8 表示支持彩色
+            return is_color_supported
+        except:
+            return False  
+def print_color(text:str,
+                fore_color:str=None,
+                back_color:str=None,
+                bold:bool=False,
+                underline:bool=False)->None:
+    """
+    带颜色打印函数
+    Args:
+        text(str): 要输出的文本
+        fore_color(str): 前景色
+            {"black","red","green","yellow",
+            "blue","purple","cyan","white"}
+        back_color(str): 背景色
+        bold(bool)->Flase: 是否加粗默
+        underline(bool)->False: 是否下划线
+    
+    Returns:
+        None
+        
+    "本函数只支持linux,macos,window10+使用"
+    """
+    if not is_color_supported():
+        # 不支持颜色，直接输出原始文本
+        print(text)
+        return
+    
+    # 颜色映射表
+    color_map = {
+        "black": 0, "red": 1, "green": 2, "yellow": 3,
+        "blue": 4, "purple": 5, "cyan": 6, "white": 7
+    }
+    # 初始化样式列表
+    styles = []
+    if bold:
+        styles.append("1")
+    if underline:
+        styles.append("4")
+    # 前景色（30+颜色编码）
+    if fore_color in color_map:
+        styles.append(str(30 + color_map[fore_color]))
+    # 背景色（40+颜色编码）
+    if back_color in color_map:
+        styles.append(str(40 + color_map[back_color]))
+    # 拼接ANSI序列
+    style_str = ";".join(styles) if styles else "0"
+    print(f"\033[{style_str}m{text}\033[0m")
 
 def get_deeptracer_root():
     """
@@ -19,12 +103,11 @@ def get_deeptracer_root():
 # 定义全局的根路径常量（方便其他模块调用）
 DEEPTRACER_ROOT = get_deeptracer_root()
 DEEPTRACER_DEV_ROOT = os.path.dirname(DEEPTRACER_ROOT)
-print(DEEPTRACER_DEV_ROOT)
+#print(DEEPTRACER_DEV_ROOT)
 __all__ = [
+    "is_color_supported",
+    "print_color",
     "get_deeptracer_root",
     "DEEPTRACER_ROOT",
     "DEEPTRACER_DEV_ROOT"
 ]
-================================================
-(Deeptracer) ricaedo@ricaedo-Legion-Y9000P-IRX9:~/Deeptracer$ /home/ricaedo/下载/yes/envs/Deeptracer/bin/python /home/ricaedo/Deeptracer/deeptracer/__init__.py
-/home/ricaedo/Deeptracer
