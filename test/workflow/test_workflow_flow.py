@@ -19,7 +19,7 @@ def test_flow_structure():
 def test_flow_function():
     from deeptracer.workflow import Flow
     coze = Flow(
-        pyPath="test/test_sources/test.py",
+        pyPath="test/test_sources/test_acc.py",
     )
     msgs = coze.setMessage()
     print(msgs)
