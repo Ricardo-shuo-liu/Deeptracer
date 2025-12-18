@@ -13,8 +13,8 @@ def test_flow_structure():
     """测试anaMemory模块的基本结构"""
     # 不实际导入，而是测试模块路径是否存在
     import os
-    agent_file_path = os.path.join('deeptracer', 'anaMemory', 'memoryAnalyzer.py')
-    assert os.path.exists(agent_file_path), f"anaMemory文件不存在: {agent_file_path}"
+    file_path = os.path.join('deeptracer', 'anaMemory', 'memoryAnalyzer.py')
+    assert os.path.exists(file_path), f"anaMemory文件不存在: {file_path}"
 
 def test_flow_function():
     from deeptracer.anaMemory import MemoryAnalyzer

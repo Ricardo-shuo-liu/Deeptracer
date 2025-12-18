@@ -17,7 +17,9 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "objprint>=0.3.0",
     "memray>=1.19.1 ",
-    "tqdm>=4.0.0"
+    "tqdm>=4.67.1",
+    "pyvis>=0.3.2",
+    "networkx>=3.4.2"
 ]
 
 #配置deeptracer主模块搜索

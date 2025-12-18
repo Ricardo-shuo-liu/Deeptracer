@@ -83,7 +83,6 @@ class  MemoryAnalyzer:
             cmd.append("--no-native-traces")
             #如果是windows系统禁用c追踪
         cmd.append(str(self.target_script))
-        print(cmd)
         try:
             subprocess.run(
                 cmd,
