@@ -50,6 +50,7 @@ class AstAnalyer:
             pythonScript(str):python源文件路径
             save_path(str):检验结果存储路径
             open(bool):是不是开启ast过滤
+            core_node_types(tuple):保留类别
         Returns:
             None
         """
@@ -263,15 +264,29 @@ class AstAnalyer:
 
 class CodeStructureAnalyzer(AstAnalyer):
         """
+        代码的类与函数的结构可视化 
         
-        
+        Args:
+             pythonScript(str):python源文件路径
+        Attributes:
+            None
+    
+        Methods:
+            None
         """
         def __init__(self,
                     pythonScript:str = None,
                     save_path:str = "deeptracer/tools_report/codeStructure.html",
                     )->None:
             """
-            
+            初始化函数
+
+            Args:
+                pythonScript(str):python源文件路径
+                save_path(str):检验结果存储路径
+
+            Returns:
+                None            
             """
             open = True
             core_node = (
@@ -285,5 +300,6 @@ class CodeStructureAnalyzer(AstAnalyer):
             super().__init__(pythonScript=pythonScript,
                              save_path=save_path,
                              open=open,
+                             core_node_types=core_node
                              )
             
