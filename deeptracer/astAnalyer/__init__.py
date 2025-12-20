@@ -1,5 +1,9 @@
-from .astVisualizer import AstAnalyer
+from .astVisualizer import (
+                            AstAnalyer,
+                            CodeStructureAnalyzer
+                            )
 
 __all__ = [
-    "AstAnalyer"
+    "AstAnalyer",
+    "CodeStructureAnalyzer"
 ]

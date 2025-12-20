@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #f9f8fa;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "font": {"color": "#000000"}, "id": "511b7447-9faf-4109-9a1c-bf376c031cf5", "label": "Module", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Module\n\u5c5e\u6027: {}"}, {"color": "#e377c2", "font": {"color": "#000000"}, "id": "74ef9ae9-9a2d-4e56-9fe5-9e497864261a", "label": "FunctionDef", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: FunctionDef\n\u5c5e\u6027: {}"}, {"color": "#e377c2", "font": {"color": "#000000"}, "id": "8335b4b4-035b-47c9-a0a9-1de7f3f38df3", "label": "FunctionDef", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: FunctionDef\n\u5c5e\u6027: {}"}, {"color": "#e377c2", "font": {"color": "#000000"}, "id": "0a3bffff-bded-4044-96f9-01508130e56c", "label": "FunctionDef", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: FunctionDef\n\u5c5e\u6027: {}"}, {"color": "#9467bd", "font": {"color": "#000000"}, "id": "27389cb3-30fa-4590-ba48-59e877991ed4", "label": "If", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: If\n\u5c5e\u6027: {}"}, {"color": "#d62728", "font": {"color": "#000000"}, "id": "93a82324-7a59-4221-929b-4aedebb0b726", "label": "Assign", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Assign\n\u5c5e\u6027: {}"}, {"color": "#000000", "font": {"color": "#000000"}, "id": "a9cf7f70-7a70-477e-a625-4d6088056a69", "label": "Return", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Return\n\u5c5e\u6027: {}"}, {"color": "#d62728", "font": {"color": "#000000"}, "id": "100308ea-abf5-451a-89b1-bd143e91fd30", "label": "Assign", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Assign\n\u5c5e\u6027: {}"}, {"color": "#8c564b", "font": {"color": "#000000"}, "id": "fb6829a3-db7d-469f-9bdc-6c77c231e39c", "label": "For", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: For\n\u5c5e\u6027: {}"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "8022dd77-01cb-4e0d-9330-30b35568d683", "label": "Call\n{\u0027function\u0027: \u0027range\u0027}", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Call\n\u5c5e\u6027: {\u0027function\u0027: \u0027range\u0027}"}, {"color": "#d62728", "font": {"color": "#000000"}, "id": "0752b5a3-c95f-4ef6-ae0d-4333471768ae", "label": "Assign", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Assign\n\u5c5e\u6027: {}"}, {"color": "#bcbd22", "font": {"color": "#000000"}, "id": "70623a48-ffd9-4a67-843b-b97dffce3765", "label": "Call\n{\u0027function\u0027: \u0027create_large_list\u0027}", "shape": "dot", "size": 15, "title": "\u7c7b\u578b: Call\n\u5c5e\u6027: {\u0027function\u0027: \u0027create_large_list\u0027}"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "511b7447-9faf-4109-9a1c-bf376c031cf5", "label": "parent", "to": "74ef9ae9-9a2d-4e56-9fe5-9e497864261a", "width": 1}, {"arrows": "to", "from": "511b7447-9faf-4109-9a1c-bf376c031cf5", "label": "parent", "to": "8335b4b4-035b-47c9-a0a9-1de7f3f38df3", "width": 1}, {"arrows": "to", "from": "511b7447-9faf-4109-9a1c-bf376c031cf5", "label": "parent", "to": "0a3bffff-bded-4044-96f9-01508130e56c", "width": 1}, {"arrows": "to", "from": "511b7447-9faf-4109-9a1c-bf376c031cf5", "label": "parent", "to": "27389cb3-30fa-4590-ba48-59e877991ed4", "width": 1}, {"arrows": "to", "from": "74ef9ae9-9a2d-4e56-9fe5-9e497864261a", "label": "parent", "to": "93a82324-7a59-4221-929b-4aedebb0b726", "width": 1}, {"arrows": "to", "from": "74ef9ae9-9a2d-4e56-9fe5-9e497864261a", "label": "parent", "to": "a9cf7f70-7a70-477e-a625-4d6088056a69", "width": 1}, {"arrows": "to", "from": "8335b4b4-035b-47c9-a0a9-1de7f3f38df3", "label": "parent", "to": "100308ea-abf5-451a-89b1-bd143e91fd30", "width": 1}, {"arrows": "to", "from": "8335b4b4-035b-47c9-a0a9-1de7f3f38df3", "label": "parent", "to": "fb6829a3-db7d-469f-9bdc-6c77c231e39c", "width": 1}, {"arrows": "to", "from": "fb6829a3-db7d-469f-9bdc-6c77c231e39c", "label": "parent", "to": "8022dd77-01cb-4e0d-9330-30b35568d683", "width": 1}, {"arrows": "to", "from": "0a3bffff-bded-4044-96f9-01508130e56c", "label": "parent", "to": "0752b5a3-c95f-4ef6-ae0d-4333471768ae", "width": 1}, {"arrows": "to", "from": "0752b5a3-c95f-4ef6-ae0d-4333471768ae", "label": "parent", "to": "70623a48-ffd9-4a67-843b-b97dffce3765", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"gravitationalConstant": -50, "centralGravity": 0.01, "springLength": 100, "springConstant": 0.08}, "maxVelocity": 50, "solver": "forceAtlas2Based", "timestep": 0.35, "stabilization": {"iterations": 150}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

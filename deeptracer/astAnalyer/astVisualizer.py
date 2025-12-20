@@ -24,7 +24,24 @@ class AstAnalyer:
     def __init__(self,
                  pythonScript:str = None,
                  save_path:str = "deeptracer/tools_report/ast_visualization.html",
-                 open:bool=True
+                 open:bool=True,
+                 core_node_types:tuple=(
+                'Module',
+                'FunctionDef',
+                'ClassDef',
+                'If',
+                'For',
+                'While', 
+                'With',
+                'Try',
+                'ExceptHandler',
+                'Assign',
+                'Return',
+                'Call',
+                'AsyncFunctionDef',
+                'Await', 
+                'AsyncFor'
+            )
                 )->None:
         """
         初始化函数
@@ -43,23 +60,7 @@ class AstAnalyer:
         #如果存在之前缓存删除缓存代码
         self.open = open
         if self.open:
-            self.core_node_types = (
-                'Module',
-                'FunctionDef',
-                'ClassDef',
-                'If',
-                'For',
-                'While', 
-                'With',
-                'Try',
-                'ExceptHandler',
-                'Assign',
-                'Return',
-                'Call',
-                'AsyncFunctionDef',
-                'Await', 
-                'AsyncFor'
-            )
+            self.core_node_types = core_node_types
         #如果选者开启过滤 只保留以上的语法节点
         self.graph = networkx.DiGraph()
         #建立网络对象
@@ -171,7 +172,10 @@ class AstAnalyer:
             'FunctionDef': '#e377c2',
             'BinOp': '#7f7f7f',
             'Call': '#bcbd22',
-            'Compare': '#17becf'
+            'Compare': '#17becf',
+            'ClassDef': '#4CAF50',      
+            'FunctionDef': '#e377c2',   
+            'AsyncFunctionDef': '#FF9800'
         }
         return color_map.get(node_type,
                              '#000000')  #如果找不到默认为黑色
@@ -256,3 +260,30 @@ class AstAnalyer:
         net.write_html(self.save_path)
         print_color(f"AST可视化已生成{self.save_path}",
                     fore_color="green")
+
+class CodeStructureAnalyzer(AstAnalyer):
+        """
+        
+        
+        """
+        def __init__(self,
+                    pythonScript:str = None,
+                    save_path:str = "deeptracer/tools_report/codeStructure.html",
+                    )->None:
+            """
+            
+            """
+            open = True
+            core_node = (
+                (
+                'Module',      
+                'ClassDef',    
+                'FunctionDef',  
+                'AsyncFunctionDef',  
+            )
+            )
+            super().__init__(pythonScript=pythonScript,
+                             save_path=save_path,
+                             open=open,
+                             )
+            
