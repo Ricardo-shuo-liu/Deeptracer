@@ -31,5 +31,6 @@ dev = [
     "flake8",
     "pre-commit",
     "black==24.1.0",
-    "isort==5.12.0"
+    "isort==5.12.0"，
+    "tqdm>=4.0.0"
 ]
