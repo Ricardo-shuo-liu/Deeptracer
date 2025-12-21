@@ -1,4 +1,4 @@
-name: Python CI (pytest)
+name: Python & Frontend CI
 
 on:
   pull_request:
@@ -8,11 +8,12 @@ on:
 
 jobs:
   test:
-    name: Test on Python ${{ matrix.python-version }}
+    name: Test on Python ${{ matrix.python-version }}, Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ['3.10']
+        node-version: ['16.x', '18.x', '20.x', '22.x']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,6 +24,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Cache pip
         uses: actions/cache@v4
@@ -63,6 +70,87 @@ jobs:
         run: |
           mkdir -p reports
           python -m pytest test/ -q --maxfail=1 --junitxml=reports/junit-${{ matrix.python-version }}.xml --cov=deeptracer --cov-report=xml:reports/coverage-${{ matrix.python-version }}.xml
+
+      - name: Check for frontend files
+        id: check-frontend-files
+        run: |
+          if find . -type f -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" -o -name "*.vue" | grep -q .; then
+            echo "::set-output name=has_frontend::true"
+          else
+            echo "::set-output name=has_frontend::false"
+          fi
+
+      - name: Install frontend dependencies
+        if: steps.check-frontend-files.outputs.has_frontend == 'true'
+        run: |
+          npm install -g prettier eslint stylelint
+          # Install ESLint plugins for React and Vue if needed
+          npm install -g eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-vue
+          # Install Stylelint plugins
+          npm install -g stylelint-config-standard
+
+      - name: Format check with Prettier
+        if: steps.check-frontend-files.outputs.has_frontend == 'true'
+        run: |
+          echo "Running Prettier format check..."
+          prettier --check "**/*.{html,css,js,jsx,ts,tsx,vue}" || echo "Prettier format check failed. Some files need formatting."
+
+      - name: Lint JavaScript/TypeScript/React/Vue with ESLint
+        if: steps.check-frontend-files.outputs.has_frontend == 'true'
+        run: |
+          echo "Running ESLint check..."
+          # Create a basic ESLint config if it doesn't exist
+          if [ ! -f .eslintrc.js ] && [ ! -f .eslintrc.json ]; then
+            cat > .eslintrc.js << 'EOF'
+            module.exports = {
+              env: {
+                browser: true,
+                es2021: true,
+                node: true
+              },
+              extends: [
+                'eslint:recommended',
+                'plugin:react/recommended',
+                'plugin:vue/vue3-recommended'
+              ],
+              parserOptions: {
+                ecmaFeatures: {
+                  jsx: true
+                },
+                ecmaVersion: 'latest',
+                sourceType: 'module'
+              },
+              plugins: [
+                'react',
+                'react-hooks',
+                'vue'
+              ],
+              rules: {
+                'react/react-in-jsx-scope': 'off'
+              },
+              settings: {
+                react: {
+                  version: 'detect'
+                }
+              }
+            };
+            EOF
+          fi
+          eslint "**/*.{js,jsx,ts,tsx,vue}" --max-warnings 0 || echo "ESLint check failed. Please fix the issues."
+
+      - name: Lint CSS with Stylelint
+        if: steps.check-frontend-files.outputs.has_frontend == 'true'
+        run: |
+          echo "Running Stylelint check..."
+          # Create a basic Stylelint config if it doesn't exist
+          if [ ! -f stylelint.config.js ] && [ ! -f .stylelintrc.json ]; then
+            cat > stylelint.config.js << 'EOF'
+            module.exports = {
+              extends: 'stylelint-config-standard'
+            };
+            EOF
+          fi
+          stylelint "**/*.css" --max-warnings 0 || echo "Stylelint check failed. Please fix the issues."
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
