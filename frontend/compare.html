@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>代码比对</title>
+    <style>
+      body { margin:0; background:#f3f4f6; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif }
+      .header { height:48px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; background:#fff; border-bottom:1px solid #e5e7eb }
+      .btn { display:inline-block; padding:6px 12px; border-radius:6px; color:#fff; background:#2563eb; text-decoration:none; cursor:pointer }
+      .btn.gray { background:#374151 }
+      .btn.green { background:#059669 }
+      .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:8px; height:calc(100vh - 48px) }
+      .card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:12px; display:flex; flex-direction:column }
+      .label { font-weight:600; margin-bottom:8px }
+      .row { display:flex; gap:8px; align-items:center; margin-bottom:8px }
+      .input { flex:1; border:1px solid #e5e7eb; border-radius:6px; padding:6px 8px }
+      .file { }
+      .ta { flex:1; border:1px solid #e5e7eb; border-radius:6px; padding:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px }
+      .diff { grid-column:1 / span 2; background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:12px; overflow:auto }
+      .line-add { background:#e6ffed; padding:4px 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px }
+      .line-del { background:#ffeef0; padding:4px 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px }
+      .line-ctx { background:#f8fafc; padding:4px 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px; color:#334155 }
+      .sym { display:inline-block; width:20px }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div style="font-weight:600">代码比对</div>
+      <div>
+        <button class="btn" id="btnDiff">比较</button>
+        <span id="status" style="margin-left:8px;color:#2563eb;display:none">加载中...</span>
+        <span id="error" style="margin-left:8px;color:#dc2626;display:none"></span>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="label">原始代码</div>
+        <div class="row">
+          <input class="input" id="leftUrl" placeholder="输入原始代码URL">
+          <button class="btn gray" id="btnLeftPull">拉取</button>
+          <input class="file" type="file" id="leftFile">
+        </div>
+        <textarea class="ta" id="left"></textarea>
+      </div>
+      <div class="card">
+        <div class="label">新代码（来自Agent或URL/文件）</div>
+        <div class="row">
+          <input class="input" id="agentUrl" placeholder="输入Agent代码URL">
+          <button class="btn green" id="btnAgentPull">从Agent拉取</button>
+        </div>
+        <div class="row">
+          <input class="input" id="rightUrl" placeholder="输入新代码URL">
+          <button class="btn gray" id="btnRightPull">拉取</button>
+          <input class="file" type="file" id="rightFile">
+        </div>
+        <textarea class="ta" id="right"></textarea>
+      </div>
+      <div class="diff">
+        <div class="label">Diff</div>
+        <div id="diffResult"></div>
+      </div>
+    </div>
+    <script>
+      async function fetchText(url) {
+        const res = await fetch(url)
+        if (!res.ok) throw new Error("拉取失败: " + res.status)
+        return await res.text()
+      }
+      function lcs(a, b) {
+        const n = a.length, m = b.length
+        const dp = Array(n+1).fill(null).map(()=>Array(m+1).fill(0))
+        for (let i=1;i<=n;i++) for (let j=1;j<=m;j++) {
+          dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j], dp[i][j-1])
+        }
+        const path = []
+        let i=n, j=m
+        while (i>0 && j>0) {
+          if (a[i-1]===b[j-1]) { path.push({type:"ctx", value:a[i-1]}); i--; j-- }
+          else if (dp[i-1][j]>=dp[i][j-1]) { path.push({type:"del", value:a[i-1]}); i-- }
+          else { path.push({type:"add", value:b[j-1]}); j-- }
+        }
+        while (i>0) { path.push({type:"del", value:a[i-1]}); i-- }
+        while (j>0) { path.push({type:"add", value:b[j-1]}); j-- }
+        return path.reverse()
+      }
+      function renderDiff(lines) {
+        const c = document.getElementById("diffResult")
+        c.innerHTML = ""
+        lines.forEach((p)=>{
+          const div = document.createElement("div")
+          if (p.type === "add") { div.className = "line-add"; div.innerHTML = `<span class="sym">+</span>${escapeHtml(p.value)}` }
+          else if (p.type === "del") { div.className = "line-del"; div.innerHTML = `<span class="sym">-</span>${escapeHtml(p.value)}` }
+          else { div.className = "line-ctx"; div.innerHTML = `<span class="sym"></span>${escapeHtml(p.value)}` }
+          c.appendChild(div)
+        })
+      }
+      function escapeHtml(s){ return s.replace(/[&<>]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[ch])) }
+      async function pullTo(idInput, idTextarea) {
+        const url = document.getElementById(idInput).value.trim()
+        if (!url) return
+        setStatus(true); setError("")
+        try {
+          const text = await fetchText(url)
+          document.getElementById(idTextarea).value = text
+        } catch(e) { setError(e.message||"未知错误") }
+        finally { setStatus(false) }
+      }
+      function setStatus(b){ document.getElementById("status").style.display = b ? "inline" : "none" }
+      function setError(s){ const el=document.getElementById("error"); el.style.display = s ? "inline" : "none"; el.textContent = s || "" }
+      document.getElementById("btnLeftPull").onclick = ()=>pullTo("leftUrl","left")
+      document.getElementById("btnRightPull").onclick = ()=>pullTo("rightUrl","right")
+      document.getElementById("btnAgentPull").onclick = ()=>pullTo("agentUrl","right")
+      document.getElementById("leftFile").onchange = (e)=>{
+        const f = e.target.files && e.target.files[0]; if(!f) return
+        const r = new FileReader(); r.onload = ()=>{ document.getElementById("left").value = String(r.result||"") }; r.readAsText(f,"utf-8")
+      }
+      document.getElementById("rightFile").onchange = (e)=>{
+        const f = e.target.files && e.target.files[0]; if(!f) return
+        const r = new FileReader(); r.onload = ()=>{ document.getElementById("right").value = String(r.result||"") }; r.readAsText(f,"utf-8")
+      }
+      document.getElementById("btnDiff").onclick = ()=>{
+        const left = document.getElementById("left").value.split("\\n")
+        const right = document.getElementById("right").value.split("\\n")
+        const lines = lcs(left, right)
+        renderDiff(lines)
+      }
+    </script>
+  </body>
+  </html>
