@@ -35,7 +35,7 @@ def get_coze_api_token(workspace_id: Optional[str] = None) -> str:
     device_code = device_oauth_app.get_device_code(workspace_id)
     print(f"Please Open: {device_code.verification_url} to get the access token")
     return device_oauth_app.get_access_token(device_code=device_code.device_code, poll=True).access_token
-pyPath="test/test_sources/test.py"
+pyPath="test/test_sources/test_acc.py"
 with open(pyPath,"r") as fb:
             orcode = fb.read()
 
