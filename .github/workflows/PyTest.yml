@@ -74,17 +74,17 @@ jobs:
       - name: Check for frontend files
         id: check-frontend-files
         run: |
-          if find . -type f -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" -o -name "*.vue" | grep -q .; then
-            echo "::set-output name=has_frontend::true"
+          if git diff --name-only origin/main...HEAD | grep -E '\.(html|css|js|jsx|ts|tsx|vue)$' >/dev/null; then
+            echo "has_frontend=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=has_frontend::false"
+            echo "has_frontend=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Install frontend dependencies
         if: steps.check-frontend-files.outputs.has_frontend == 'true'
         run: |
           npm install -g prettier eslint stylelint
-          # Install ESLint plugins for React and Vue if needed
+          # Install ESLint plugins for React and Vue
           npm install -g eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-vue
           # Install Stylelint plugins
           npm install -g stylelint-config-standard
@@ -101,40 +101,7 @@ jobs:
           echo "Running ESLint check..."
           # Create a basic ESLint config if it doesn't exist
           if [ ! -f .eslintrc.js ] && [ ! -f .eslintrc.json ]; then
-            cat > .eslintrc.js << 'EOF'
-            module.exports = {
-              env: {
-                browser: true,
-                es2021: true,
-                node: true
-              },
-              extends: [
-                'eslint:recommended',
-                'plugin:react/recommended',
-                'plugin:vue/vue3-recommended'
-              ],
-              parserOptions: {
-                ecmaFeatures: {
-                  jsx: true
-                },
-                ecmaVersion: 'latest',
-                sourceType: 'module'
-              },
-              plugins: [
-                'react',
-                'react-hooks',
-                'vue'
-              ],
-              rules: {
-                'react/react-in-jsx-scope': 'off'
-              },
-              settings: {
-                react: {
-                  version: 'detect'
-                }
-              }
-            };
-            EOF
+            echo "module.exports = { env: { browser: true, es2021: true, node: true }, extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:vue/vue3-recommended'], parserOptions: { ecmaFeatures: { jsx: true }, ecmaVersion: 'latest', sourceType: 'module' }, plugins: ['react', 'react-hooks', 'vue'], rules: { 'react/react-in-jsx-scope': 'off' }, settings: { react: { version: 'detect' } } };" > .eslintrc.js
           fi
           eslint "**/*.{js,jsx,ts,tsx,vue}" --max-warnings 0 || echo "ESLint check failed. Please fix the issues."
 
@@ -144,11 +111,7 @@ jobs:
           echo "Running Stylelint check..."
           # Create a basic Stylelint config if it doesn't exist
           if [ ! -f stylelint.config.js ] && [ ! -f .stylelintrc.json ]; then
-            cat > stylelint.config.js << 'EOF'
-            module.exports = {
-              extends: 'stylelint-config-standard'
-            };
-            EOF
+            echo "module.exports = { extends: 'stylelint-config-standard' };" > stylelint.config.js
           fi
           stylelint "**/*.css" --max-warnings 0 || echo "Stylelint check failed. Please fix the issues."
 
