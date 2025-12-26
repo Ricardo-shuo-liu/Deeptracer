@@ -227,8 +227,8 @@ class _fileChange():
                                     dst_path=dst_path,
                                     FORMAT_MARK=FORMAT_MARK
                                     )
-            case ".svg":
-                FORMAT_MARK = "#XML"
+            case ".html":
+                FORMAT_MARK = "#HTML"
                 self._contentChange(src_path=src_path,
                                     dst_path=dst_path,
                                     FORMAT_MARK=FORMAT_MARK
@@ -272,7 +272,7 @@ class Flow():
     
     Args:
         jsonPath(str) : viztracer逻辑生成的活动文件的路径
-        svgPath(str) : py-sqy逻辑生成的活动文件的路径
+        htmlPath(str) : memray逻辑生成的活动文件的路径
         pyPath(str) : 检测源文件的路径地址
         txtPath(str) : Ast树的存储文件位置
     Attributes:
@@ -285,7 +285,7 @@ class Flow():
     def __init__(self,
                  pyPath:str,
                  jsonPath:str=None,
-                 svgPath:str=None,
+                 htmlPath:str=None,
                  txtPath:str=None,
                  open:bool=False,
                  configPath:str = "deeptracer/workflow/.env.local",
@@ -295,8 +295,8 @@ class Flow():
         初始化函数,实现对象的基本参数逻辑的定义
 
         Args:
-           jsonPath(str) : viztracer逻辑生成的活动文件的路径
-            svgPath(str) : py-sqy逻辑生成的活动文件的路径
+            jsonPath(str) : viztracer逻辑生成的活动文件的路径
+            htmlPath(str) : memray逻辑生成的活动文件的路径
             pyPath(str) : 检测源文件的路径地址 
             txtPath(str) : Ast树的存储文件位置
         Returns:
@@ -311,7 +311,7 @@ class Flow():
             fileF = _fileChange()
             self.files_paths = {
                 "json":fileF._toTxt(jsonPath,cachePath),
-                "xml":fileF._toTxt(svgPath,cachePath),
+                "html":fileF._toTxt(htmlPath,cachePath),
                 "python": fileF._toTxt(pyPath,cachePath),
                 "txt":fileF._toTxt(txtPath,cachePath)
             }
@@ -384,7 +384,7 @@ class Flow():
         #切割路径获得后缀
         content_types = {
                         ".json": "application/json",
-                        ".svg": "image/svg+xml",
+                        ".html": "text/html",
                         ".py": "text/x-python",
                         ".txt": "text/plain",
                         ".md": "text/markdown"
@@ -408,7 +408,7 @@ class Flow():
         """
         try:
             print_color(f"开始上传{file_path}文件","blue")  
-            with open(file_path,"rb") as fb:
+            with open(file_path,"rb",encoding="utf-8") as fb:
                 uploadObj = cozeObj.files.upload(
                     file=fb
                 )
@@ -452,7 +452,7 @@ class Flow():
         MessageObjList = self._ids_to_Messgae(ids=file_ids)
         default_prompt_path = os.path.join(DEEPTRACER_DEV_ROOT,prompt_path)
         #得到coze对象实现一次调用函数直接发送信息
-        with open(default_prompt_path,"r") as fb:
+        with open(default_prompt_path,"r",encoding="utf-8") as fb:
             default_prompt = fb.read()
         final_prompt = prompt if prompt else default_prompt
         
@@ -503,7 +503,7 @@ class Flow():
         
         cozeobject = self.contection()
         #得到coze对象实现一次调用函数直接发送信息
-        with open(self.pyPath,"r") as fb:
+        with open(self.pyPath,"r",encoding="utf-8") as fb:
             orcode = fb.read()
         user_message = Message.build_user_question_objects(
             [
