@@ -19,10 +19,10 @@ def test_flow_structure():
 def test_flow_function():
     from deeptracer.workflow import Flow
     coze = Flow(
-        pyPath="test/test_sources/test_acc.py",
+        pyPath="test/test_sources/test_mem.py",
     )
-    msgs = coze.setMessage()
-    print(msgs)
+    coze.setMessage()
 
 if __name__ == "__main__":
     test_flow_function()
+

@@ -1,0 +1,9 @@
+{
+    "modifications": [
+        {
+            "reason": "使用列表推导式替代显式for循环，代码更简洁且符合Pythonic风格（简洁胜于复杂）",
+            "diff": "```diff\n--- a/test_mem.py\n+++ b/test_mem.py\n@@ -9,8 +9,7 @@ def leak_memory():\n     # 模拟内存泄漏：全局变量持有对象，不释放\n     global leaked_data\n     leaked_data = []\n-    for i in range(5_000_000):\n-        leaked_data.append({\"key\": i, \"value\": str(i)})  # 约 400MB 内存\n+    leaked_data = [{\"key\": i, \"value\": str(i)} for i in range(5_000_000)]  # 约 400MB 内存\n \n def main():\n     print(\"开始运行测试脚本...\")\n```"
+        }
+    ],
+    "full_optimized_code": "  # test_mem.py\nimport time\n\ndef create_large_list():\n    # 分配大列表（占用内存）\n    large_data = [i for i in range(10_000_000)]  # 约 80MB 内存\n    return large_data\n\ndef leak_memory():\n    # 模拟内存泄漏：全局变量持有对象，不释放\n    global leaked_data\n    leaked_data = [{\"key\": i, \"value\": str(i)} for i in range(5_000_000)]  # 约 400MB 内存\n\ndef main():\n    print(\"开始运行测试脚本...\")\n    # 正常分配 + 释放\n    normal_data = create_large_list()\n    del normal_data  # 释放内存\n    time.sleep(1)\n    \n    # 模拟泄漏\n    leak_memory()\n    time.sleep(2)\n    print(\"脚本运行完成（内存泄漏未释放）\")\n\nif __name__ == \"__main__\":\n    main()"
+}

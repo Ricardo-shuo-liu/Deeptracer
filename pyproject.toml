@@ -19,7 +19,8 @@ dependencies = [
     "memray>=1.19.1 ",
     "tqdm>=4.67.1",
     "pyvis>=0.3.2",
-    "networkx>=3.4.2"
+    "networkx>=3.4.2",
+    "pyinstrument>=5.1.1"
 ]
 
 #配置deeptracer主模块搜索
