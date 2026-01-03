@@ -137,7 +137,7 @@ class AstAnalyer:
         self.graph.add_node(
             node_id,
             label=node_info['label'],
-            title=f"类型: {node_info['type']}\n属性: {node_info['attrs']}",  # 鼠标悬浮提示
+            title=f"type: {node_info['type']}\nattribute: {node_info['attrs']}",  # 鼠标悬浮提示
             color=self._get_node_color(node_info['type']),  # 按类型着色
             size=15  # 节点大小
         )
