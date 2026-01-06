@@ -20,6 +20,9 @@ import shutil
 import tempfile
 import threading
 from tqdm.auto import tqdm
+import json
+
+
 class get_env_messgae():
     """
     
@@ -289,7 +292,8 @@ class Flow():
                  txtPath:str=None,
                  open:bool=False,
                  configPath:str = "deeptracer/workflow/.env.local",
-                 cachePath:str = "deeptracer/workflow/activityFilesTXT"
+                 cachePath:str = "deeptracer/workflow/activityFilesTXT",
+                 save_path:str = "deeptracer/tools_report/agentReply.json"
                  )->None:
         """
         初始化函数,实现对象的基本参数逻辑的定义
@@ -302,8 +306,8 @@ class Flow():
         Returns:
             None
         """
+        self.savePath = os.path.join(DEEPTRACER_DEV_ROOT,save_path)
         self.open = open
-
         self._REQUEST_DONE = False
         config_Path = os.path.join(DEEPTRACER_DEV_ROOT,configPath)
         load_dotenv(config_Path)#配置环境变量
@@ -642,7 +646,8 @@ class Flow():
         #拼接信息
     def setMessage(self,
                    prompt:str=None,
-                   prompt_path:str="deeptracer/workflow/prompt/default_prompt.txt")->str:
+                   prompt_path:str="deeptracer/workflow/prompt/default_prompt.txt"
+                   )->None:
         
         """
         交流节点
@@ -661,5 +666,52 @@ class Flow():
                 prompt=prompt,
                 prompt_path=prompt_path
             )
-        return result
+        self._load_json(result=result)  
+
+    def  _load_json(self,
+                    result:str
+                    )->None:
+        """
+        将输出结果存储为json文件
         
+        Args:
+            result(str): agent 返回结果
+        Returns:
+            None
+        """
+        if os.path.exists(self.savePath):
+            try:
+                # 直接删除非空文件夹（核心函数）
+                os.remove(self.savePath)
+            except Exception as e:
+                raise FileExistsError(f"{e}")
+        
+        result_dict = self._to_json(result)
+        with open(self.savePath,"w") as fp:
+            json.dump(
+                      obj=result_dict,
+                      fp=fp,
+                      indent=4,
+                      ensure_ascii=False
+                      )
+            
+    def _to_json(self,
+                 result:str
+                 )->dict:
+        
+        """
+        将输出结果转化为符合json的格式
+        
+        Args:
+            result(str):agent 返回结果
+        Returns:
+            result_dict(dict):符合json存储结构的对象
+
+        """
+        second_json_start = result.find('{"msg_type":')
+        json1_str = result[:second_json_start].strip()
+        try:
+            result_dict = json.loads(json1_str)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"JSON 解析失败：{e}，原始内容：{result}") from e
+        return result_dict
