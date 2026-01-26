@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deeptracer 前端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  </head>
+  <body class="h-screen">
+    <div id="root" class="h-full"></div>
+    <script>
+      const { useState } = React
+      function App() {
+        const [data, setData] = useState(null)
+        const [loading, setLoading] = useState(false)
+        const [error, setError] = useState(null)
+        async function fetchData() {
+          setLoading(true)
+          setError(null)
+          try {
+            const res = await fetch("/api/realtime-json")
+            if (!res.ok) throw new Error("请求失败")
+            const json = await res.json()
+            setData(json)
+          } catch (e) {
+            setError(e.message || "未知错误")
+          } finally {
+            setLoading(false)
+          }
+        }
+        async function downloadJson() {
+          try {
+            const res = await fetch("/download/realtime-json")
+            const blob = await res.blob()
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement("a")
+            a.href = url
+            a.download = "realtime.json"
+            a.click()
+            URL.revokeObjectURL(url)
+          } catch (e) {}
+        }
+        return React.createElement(
+          "div",
+          { className: "h-full bg-gray-100" },
+          React.createElement(
+            "header",
+            { className: "h-12 px-4 flex items-center justify-between bg-white border-b" },
+            React.createElement("div", { className: "font-semibold" }, "Deeptracer"),
+            React.createElement(
+              "div",
+              { className: "space-x-2" },
+              React.createElement(
+                "button",
+                { className: "px-3 py-1 rounded bg-blue-600 text-white", onClick: fetchData },
+                "获取实时数据"
+              ),
+              React.createElement(
+                "button",
+                { className: "px-3 py-1 rounded bg-gray-700 text-white", onClick: downloadJson },
+                "下载JSON"
+              )
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "grid grid-cols-3 gap-2 p-2 h-[calc(100vh-3rem)]" },
+            React.createElement(
+              "div",
+              { className: "bg-white border rounded p-3 overflow-auto" },
+              React.createElement("div", { className: "font-medium mb-2" }, "窗口一"),
+              data
+                ? React.createElement(
+                    "div",
+                    null,
+                    React.createElement("div", null, "传感器数量：", String(data.business_data?.sensor_list?.length || 0)),
+                    React.createElement("div", null, "状态：", String(data.business_data?.status || "unknown")),
+                    React.createElement("div", null, "总数：", String(data.business_data?.total_count || 0))
+                  )
+                : React.createElement("div", { className: "text-gray-500" }, "暂无数据")
+            ),
+            React.createElement(
+              "div",
+              { className: "bg-white border rounded p-3 overflow-auto" },
+              React.createElement("div", { className: "font-medium mb-2" }, "窗口二"),
+              loading
+                ? React.createElement("div", { className: "text-blue-600" }, "加载中...")
+                : error
+                ? React.createElement("div", { className: "text-red-600" }, error)
+                : React.createElement(
+                    "pre",
+                    { className: "text-xs whitespace-pre-wrap" },
+                    data ? JSON.stringify(data, null, 2) : "点击上方“获取实时数据”"
+                  )
+            ),
+            React.createElement(
+              "div",
+              { className: "bg-white border rounded p-3 overflow-auto" },
+              React.createElement("div", { className: "font-medium mb-2" }, "窗口三"),
+              data
+                ? React.createElement(
+                    "div",
+                    null,
+                    React.createElement("div", null, "时间：", String(data.meta?.timestamp || "")),
+                    React.createElement("div", null, "来源：", String(data.meta?.data_source || "")),
+                    React.createElement("div", null, "版本：", String(data.meta?.version || ""))
+                  )
+                : React.createElement("div", { className: "text-gray-500" }, "暂无元信息")
+            )
+          )
+        )
+      }
+      const root = document.getElementById("root")
+      ReactDOM.createRoot(root).render(React.createElement(App))
+    </script>
+  </body>
+  </html>
