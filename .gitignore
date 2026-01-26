@@ -3,6 +3,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # ========== C扩展文件 ==========
 *.so
@@ -120,3 +121,6 @@ lerna-debug.log*
 # Windows和Mac系统生成的文件
 Thumbs.db
 .DS_Store
+
+# 忽略所有.egg-info/.egg.info构建目录（适配不同命名）
+*.egg-info/
