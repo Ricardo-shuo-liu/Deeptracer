@@ -1,6 +1,6 @@
 # Deeptracer - 🤖 Intelligent Code Analysis and Refactoring Platform 🚀
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python >3.10.9](https://img.shields.io/badge/python-%3E3.10.9-blue.svg)](https://www.python.org/downloads/)
 [![Code Analysis](https://img.shields.io/badge/Feature-Code%20Analysis-blueviolet.svg)](https://github.com/yourusername/deeptracer)
 [![Performance Analysis](https://img.shields.io/badge/Feature-Performance%20Analysis-green.svg)](https://github.com/yourusername/deeptracer)
 [![Memory Analysis](https://img.shields.io/badge/Feature-Memory%20Analysis-orange.svg)](https://github.com/yourusername/deeptracer)
@@ -78,7 +78,7 @@ Deeptracer is an 🤖 AI-driven intelligent code analysis and refactoring platfo
 ### Backend
 
 - FastAPI (Web framework)
-- Python 3.10
+- Python >3.10.9
 - Analysis Tools:
   - Pyinstrument (performance analysis)
   - Memray (memory analysis)
@@ -96,7 +96,7 @@ Deeptracer is an 🤖 AI-driven intelligent code analysis and refactoring platfo
 
 ### Environment Requirements
 
-- Python 3.10+
+- Python >3.10.9 (3.10.10+)
 - Node.js 16+
 - Modern browser (Chrome/Firefox/Safari)
 
@@ -127,11 +127,12 @@ npm install
 
 ```bash
 # Basic analysis command
-deptracer script.py
+deeptracer script.py
 
-# Optional parameters
-deptracer --output <output-path> script.py
-deptracer --verbose script.py
+# Enable full AST syntax tree visualization
+deeptracer script.py --all
+# or use short form
+deeptracer script.py -a
 ```
 
 #### Configuration Instructions
@@ -187,7 +188,7 @@ deptracer --verbose script.py
 
 1. **File Encoding**: All files must use UTF-8 encoding
 2. **File Operations**: All file opens must explicitly specify encoding='utf-8'
-3. **Python Version**: Unified development with Python 3.10
+3. **Python Version**: Unified development with Python >3.10.9
 4. **Function Definition**: Use type annotations and docstrings
 
 ```python
