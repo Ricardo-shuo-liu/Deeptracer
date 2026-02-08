@@ -9,11 +9,11 @@ def test_CodeStructureAnalyzer_import():
         except ImportError as e:
             assert str(e) != ""
 
-def test_astVisualizer_structure():
+def test_viztracer_structure():
     """测试模块astVisualizer的基本结构"""
     # 不实际导入，而是测试模块路径是否存在
     import os
-    file_path = os.path.join('deeptracer', 'astAnalyer', 'astVisualizer.py')
+    file_path = os.path.join('deeptracer', 'astAnalyer', 'viztracer.py')
     assert os.path.exists(file_path), f"astVisualizer文件不存在: {file_path}"
 
 def test_main_function():
