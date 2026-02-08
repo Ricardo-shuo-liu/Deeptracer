@@ -1,4 +1,4 @@
-from .memoryAnalyzer import *
+from .viztracer import *
 
 __all__ = [
     "MemoryAnalyzer"

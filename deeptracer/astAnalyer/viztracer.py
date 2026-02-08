@@ -23,7 +23,7 @@ class AstAnalyer:
     """
     def __init__(self,
                  pythonScript:str = None,
-                 save_path:str = "deeptracer/tools_report/ast_visualization.html",
+                 save_path:str = "deeptracer/reports/ast_visualization.html",
                  open:bool=True,
                  core_node_types:tuple=(
                 'Module',
@@ -276,7 +276,7 @@ class CodeStructureAnalyzer(AstAnalyer):
         """
         def __init__(self,
                     pythonScript:str = None,
-                    save_path:str = "deeptracer/tools_report/codeStructure.html",
+                    save_path:str = "deeptracer/reports/codeStructure.html",
                     )->None:
             """
             初始化函数

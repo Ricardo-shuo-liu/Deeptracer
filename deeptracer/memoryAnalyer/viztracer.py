@@ -15,7 +15,7 @@ class  MemoryAnalyzer:
     """
     def __init__(self,
                  input_path:str,
-                 output_dir:str="deeptracer/tools_report"
+                 output_dir:str="deeptracer/reports"
                  )->None:    
         """
         内存分析器初始化函数
