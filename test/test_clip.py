@@ -13,8 +13,8 @@ def test_clip_structure():
     """测试clip的基本结构"""
     # 不实际导入，而是测试模块路径是否存在
     import os
-    agent_file_path = os.path.join('deeptracer''clip.py')
-    assert os.path.exists(agent_file_path), f"clip文件不存在: {agent_file_path}"
+    file_path = os.path.join('deeptracer','clip.py')
+    assert os.path.exists(file_path), f"clip文件不存在: {file_path}"
 
 def test_clip_function():
     from deeptracer.clip import main
