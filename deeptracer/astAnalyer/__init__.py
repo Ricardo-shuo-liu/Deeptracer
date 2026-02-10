@@ -1,4 +1,4 @@
-from .astVisualizer import (
+from .viztracer import (
                             AstAnalyer,
                             CodeStructureAnalyzer
                             )

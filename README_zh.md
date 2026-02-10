@@ -1,6 +1,6 @@
 # Deeptracer - 🤖 智能代码分析与重构平台 🚀
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python >3.10.9](https://img.shields.io/badge/python-%3E3.10.9-blue.svg)](https://www.python.org/downloads/)
 [![Code Analysis](https://img.shields.io/badge/功能-代码分析-blueviolet.svg)](https://github.com/yourusername/deeptracer)
 [![Performance Analysis](https://img.shields.io/badge/功能-性能分析-green.svg)](https://github.com/yourusername/deeptracer)
 [![Memory Analysis](https://img.shields.io/badge/功能-内存分析-orange.svg)](https://github.com/yourusername/deeptracer)
@@ -78,7 +78,7 @@ Deeptracer 是一个 🤖 AI驱动的智能代码分析与重构平台，通过�
 ### 后端
 
 - FastAPI（Web框架）
-- Python 3.10
+- Python >3.10.9
 - 分析工具：
   - Pyinstrument（性能分析）
   - Memray（内存分析）
@@ -96,7 +96,7 @@ Deeptracer 是一个 🤖 AI驱动的智能代码分析与重构平台，通过�
 
 ### 环境要求
 
-- Python 3.10+
+- Python >3.10.9 (3.10.10+)
 - Node.js 16+
 - 现代浏览器（Chrome/Firefox/Safari）
 
@@ -127,11 +127,12 @@ npm install
 
 ```bash
 # 基础分析命令
-deptracer script.py
+deeptracer script.py
 
-# 可选参数
-deptracer --output <output-path> script.py
-deptracer --verbose script.py
+# 启用完整AST语法树可视化
+deeptracer script.py --all
+# 或使用简短形式
+deeptracer script.py -a
 ```
 
 #### 配置说明
@@ -187,7 +188,7 @@ deptracer --verbose script.py
 
 1. **文件编码**：所有文件必须使用UTF-8编码
 2. **文件操作**：所有文件的open必须显式标注encoding='utf-8'
-3. **Python版本**：统一使用Python 3.10开发
+3. **Python版本**：统一使用Python >3.10.9开发
 4. **函数定义**：使用类型注解和文档字符串
 
 ```python

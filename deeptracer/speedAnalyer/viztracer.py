@@ -6,14 +6,14 @@ from pyinstrument.renderers import HTMLRenderer
 from deeptracer import (
     DEEPTRACER_DEV_ROOT,
     print_color)
-class PyInstrumentAnalyzer:
+class SpeedAnalyzer:
     """
     PyInstrument 性能分析
 
     """
 
     def __init__(self,
-                 default_report_path: str = "deeptracer/tools_report/VizPzInstrument.html"
+                 default_report_path: str = "deeptracer/reports/VizPzInstrument.html"
                  )->None:
         """
         初始化分析器
