@@ -22,6 +22,10 @@ import threading
 from tqdm.auto import tqdm
 import json
 
+os.environ.pop('HTTP_PROXY', None)
+os.environ.pop('HTTPS_PROXY', None)
+os.environ.pop('http_proxy', None)
+os.environ.pop('https_proxy', None)
 
 class get_env_messgae():
     """
@@ -306,6 +310,8 @@ class Flow():
         Returns:
             None
         """
+        self.result = None 
+        self._REQUEST_DONE = False
         self.savePath = os.path.join(DEEPTRACER_DEV_ROOT,save_path)
         self.open = open
         self._REQUEST_DONE = False
@@ -527,7 +533,7 @@ class Flow():
             self._show_progress_bar(estimated_total=60)
             req_thread.join()
             print_color("云端智能体已经分析完毕！",fore_color="green")
-            msgs = getattr(self.result,"messages",[])
+            msgs = getattr(self.result,"messages",[]) if self.result is not None else []
             #清理传递过程中产生的缓存文件
             return self.messageDraw(msgs)
         except Exception as e:
@@ -708,7 +714,14 @@ class Flow():
             result_dict(dict):符合json存储结构的对象
 
         """
+        if not result.strip():
+            print_color("智能体返回结果为空，返回空字典", fore_color="yellow")
+            return {}
+        
         second_json_start = result.find('{"msg_type":')
+        if second_json_start == -1:
+        # 找不到JSON片段，返回原始内容封装
+            return {"content": result.strip()}
         json1_str = result[:second_json_start].strip()
         try:
             result_dict = json.loads(json1_str)

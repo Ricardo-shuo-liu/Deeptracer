@@ -24,6 +24,3 @@ def main():
     leak_memory()
     time.sleep(2)
     print("脚本运行完成（内存泄漏未释放）")
-
-if __name__ == "__main__":
-    main()

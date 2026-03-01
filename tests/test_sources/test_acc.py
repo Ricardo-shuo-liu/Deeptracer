@@ -410,8 +410,3 @@ def main():
         if os.path.exists(file):
             os.remove(file)
             print(f"已删除：{file}")
-
-# ===================== 执行入口 =====================
-if __name__ == "__main__":
-    main()
-    print("\n=== 所有测试完成！无语法报错，性能报告已生成 ===")
