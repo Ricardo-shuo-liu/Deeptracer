@@ -9,7 +9,7 @@ logger_cache = {}
 
 def get_target_path():
     """
-    获得当M2x文件夹所处路径
+    获得当Deeptracer文件夹所处路径
     """
     target_path = Path(__file__).resolve().parent.parent
 
@@ -37,16 +37,16 @@ def logtitle(func:Callable
             logFiler = logging.FileHandler(log_file, encoding="utf-8")
             logFiler.setLevel(logging.ERROR)  # 只记录错误日志
 
-            # 3. 配置控制台处理器（INFO及以上，方便调试）
+            # 配置控制台处理器
             loghandler = logging.StreamHandler()
             loghandler.setLevel(logging.INFO)
 
-            # 4. 日志格式：包含时间、级别、函数名、信息
+            # 日志格式：包含时间、级别、函数名、信息
             formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s - %(message)s')
             loghandler.setFormatter(formatter)
             logFiler.setFormatter(formatter)
 
-            # 5. 添加处理器并缓存
+            # 添加处理器并缓存
             log.addHandler(logFiler)
             log.addHandler(loghandler)
             logger_cache[logger_name] = log
@@ -58,14 +58,14 @@ def logtitle(func:Callable
             result = func(*args, **kwargs)
             log.info(f"测试用例 {func.__name__} 执行完成（无业务异常）")
             return result
-        # 2. 仅捕获业务相关的Exception异常，忽略SystemExit等系统异常
+
         except Exception as e:
-            # 记录业务异常日志（包含堆栈）
+            # 记录业务异常日志
             log.error(f"测试用例 {func.__name__} 业务执行失败", exc_info=True)
             raise e  # 重新抛出，让pytest标记测试失败
-        # 3. 系统级异常直接放行，不记录日志
+        # 系统级异常直接放行，不记录日志
         except BaseException as e:
-            # 控制台打印提示（不写入文件）
+            # 控制台打印提示
             log.info(f"测试用例 {func.__name__} 触发系统级异常（非业务错误）: {type(e).__name__}")
             raise e  # 直接抛出，不记录到test.log
         finally:
