@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 import sys
-from server import test
+# from server import test
 # server 中需要实现fastapi的核心功能 目前test只作为占位
 
 

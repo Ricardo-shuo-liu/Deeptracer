@@ -1,0 +1,26 @@
+2026-03-01 16:24:04,307 - ERROR - tools - 测试用例 test_flow_function 业务执行失败
+Traceback (most recent call last):
+  File "/home/ricaedo/Deeptracer/deeptracer/workflow/flow.py", line 720, in _to_json
+    result_dict = json.loads(json1_str)
+  File "/home/ricaedo/下载/yes/envs/Deeptracer/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/home/ricaedo/下载/yes/envs/Deeptracer/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/home/ricaedo/下载/yes/envs/Deeptracer/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ricaedo/Deeptracer/tests/conftest.py", line 58, in tools
+    result = func(*args, **kwargs)
+  File "/home/ricaedo/Deeptracer/tests/test_workflow/test_workflow_flow.py", line 24, in test_flow_function
+    coze.setMessage()
+  File "/home/ricaedo/Deeptracer/deeptracer/workflow/flow.py", line 675, in setMessage
+    self._load_json(result=result)
+  File "/home/ricaedo/Deeptracer/deeptracer/workflow/flow.py", line 695, in _load_json
+    result_dict = self._to_json(result)
+  File "/home/ricaedo/Deeptracer/deeptracer/workflow/flow.py", line 722, in _to_json
+    raise ValueError(f"JSON 解析失败：{e}，原始内容：{result}") from e
+ValueError: JSON 解析失败：Expecting value: line 1 column 1 (char 0)，原始内容：
