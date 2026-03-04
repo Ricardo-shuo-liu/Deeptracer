@@ -1,5 +1,5 @@
-def test():
-    """
-    这是一个占位置function
-    """
-    pass
+from .app import start
+
+__all__ = [
+    "start"
+]

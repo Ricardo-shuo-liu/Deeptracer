@@ -3,6 +3,7 @@ from .viztracer import (
                             CodeStructureAnalyzer
                             )
 
+
 __all__ = [
     "AstAnalyer",
     "CodeStructureAnalyzer"

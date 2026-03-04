@@ -2,11 +2,10 @@ from pyvis.network import Network
 import networkx
 import ast
 import os 
-from deeptracer import (
-    DEEPTRACER_DEV_ROOT,
-    print_color
-    )
+from deeptracer import print_color
 import uuid
+from deeptracer.astAnalyer.env_utils import TYPES
+
 
 class AstAnalyer:
     """
@@ -23,25 +22,8 @@ class AstAnalyer:
     """
     def __init__(self,
                  pythonScript:str = None,
-                 save_path:str = "deeptracer/reports/ast_visualization.html",
                  open:bool=True,
-                 core_node_types:tuple=(
-                'Module',
-                'FunctionDef',
-                'ClassDef',
-                'If',
-                'For',
-                'While', 
-                'With',
-                'Try',
-                'ExceptHandler',
-                'Assign',
-                'Return',
-                'Call',
-                'AsyncFunctionDef',
-                'Await', 
-                'AsyncFor'
-            )
+                 core_node_types:tuple=TYPES
                 )->None:
         """
         初始化函数
@@ -55,9 +37,6 @@ class AstAnalyer:
             None
         """
         self.pythonScript = pythonScript
-        self.save_path = os.path.join(DEEPTRACER_DEV_ROOT,save_path)
-        if os.path.exists(self.save_path):
-            os.remove(self.save_path)
         #如果存在之前缓存删除缓存代码
         self.open = open
         if self.open:
@@ -258,10 +237,10 @@ class AstAnalyer:
         """)
         
         # 生成HTML文件
-        net.write_html(self.save_path)
-        print_color(f"AST可视化已生成{self.save_path}",
+        core_html = net.generate_html()
+        print_color(f"AST可视化已生成",
                     fore_color="green")
-
+        return core_html
 class CodeStructureAnalyzer(AstAnalyer):
         """
         代码的类与函数的结构可视化 
@@ -276,7 +255,6 @@ class CodeStructureAnalyzer(AstAnalyer):
         """
         def __init__(self,
                     pythonScript:str = None,
-                    save_path:str = "deeptracer/reports/codeStructure.html",
                     )->None:
             """
             初始化函数
@@ -298,7 +276,6 @@ class CodeStructureAnalyzer(AstAnalyer):
             )
             )
             super().__init__(pythonScript=pythonScript,
-                             save_path=save_path,
                              open=open,
                              core_node_types=core_node
                              )

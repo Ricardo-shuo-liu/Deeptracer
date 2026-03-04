@@ -10,21 +10,7 @@ class SpeedAnalyzer:
     """
     PyInstrument 性能分析
 
-    """
-
-    def __init__(self,
-                 default_report_path: str = "deeptracer/reports/VizPzInstrument.html"
-                 )->None:
-        """
-        初始化分析器
-
-        Args:
-            default_report_path(str): 默认报告生成路径
-        """
-        self.default_report_path = os.path.join(DEEPTRACER_DEV_ROOT,default_report_path)
-        # 创建默认报告目录
-        if os.path.exists(self.default_report_path):
-           os.remove(self.default_report_path) 
+    """   
     def _validate_py_file(self, 
                           py_file_path: str) -> str:
         """
@@ -92,18 +78,18 @@ class SpeedAnalyzer:
             py_file_path: 待分析的 Python 文件路径（相对/绝对）
             interval: 采样间隔（秒），越小精度越高，默认 1ms
         Returns:
-            最终生成的 HTML 报告路径
+            最终生成的 HTML
         """
         abs_py_path = self._validate_py_file(py_file_path)
 
         
-        # 3. 初始化 PyInstrument 分析器
+        # 初始化 PyInstrument 分析器
         profiler = Profiler(
             interval=interval
         )
 
         try:
-            # 4. 开始追踪并执行目标 py 文件
+            # 开始追踪并执行目标 py 文件
             print_color(f"开始分析文件：{abs_py_path}",fore_color="blue")
             profiler.start()
             # 执行 py 文件
@@ -111,15 +97,11 @@ class SpeedAnalyzer:
             profiler.stop()
             print_color("分析完成，开始生成 HTML 报告...",fore_color="green")
 
-            # 5. 生成 HTML 报告并保存
+            # 生成 HTML 报告并保存
             renderer = HTMLRenderer()
             html_content = renderer.render(profiler.last_session)
-
-            with open(self.default_report_path, "w", encoding="utf-8") as f:
-                f.write(html_content)
-
             print_color(f"HTML 性能报告已生成",fore_color="green")
-            return self.default_report_path
+            return html_content
 
         except Exception as e:
             raise RuntimeError(f"生成报告失败：{str(e)}") from e
