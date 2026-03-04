@@ -20,7 +20,7 @@ dependencies = [
     "pyvis>=0.3.2",
     "networkx>=3.4.2",
     "pyinstrument>=5.1.1",
-    "fastapi>=0.135.1"，
+    "fastapi>=0.135.1",
     "uvicorn>=0.41.0"
 ]
 
