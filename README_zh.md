@@ -1,10 +1,10 @@
 # Deeptracer - 🤖 智能代码分析与重构平台 🚀
 
 [![Python >3.10.9](https://img.shields.io/badge/python-%3E3.10.9-blue.svg)](https://www.python.org/downloads/)
-[![Code Analysis](https://img.shields.io/badge/功能-代码分析-blueviolet.svg)](https://github.com/yourusername/deeptracer)
-[![Performance Analysis](https://img.shields.io/badge/功能-性能分析-green.svg)](https://github.com/yourusername/deeptracer)
-[![Memory Analysis](https://img.shields.io/badge/功能-内存分析-orange.svg)](https://github.com/yourusername/deeptracer)
-[![AI Refactoring](https://img.shields.io/badge/功能-智能重构-purple.svg)](https://github.com/yourusername/deeptracer)
+[![Code Analysis](https://img.shields.io/badge/功能-代码分析-blueviolet.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![Performance Analysis](https://img.shields.io/badge/功能-性能分析-green.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![Memory Analysis](https://img.shields.io/badge/功能-内存分析-orange.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![AI Refactoring](https://img.shields.io/badge/功能-智能重构-purple.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
 
 ---
 
@@ -126,6 +126,9 @@ npm install
 #### 命令行接口
 
 ```bash
+#配置你的coze key
+deeptracer --key yourKeys
+
 # 基础分析命令
 deeptracer script.py
 
@@ -143,7 +146,7 @@ deeptracer script.py -a
   - `COZE_WORKFLOW_ID`：Coze工作流ID
 
 - **配置文件**：
-  - `deeptracer/workflow/.env.local`：本地配置文件
+  - `~/.deeptracer/.env.local`：本地配置文件
 
 ## 🏗️ 系统架构
 
@@ -153,14 +156,14 @@ deeptracer script.py -a
 🤖 用户命令行输入 → 🚀 分析引擎 → 📊 数据收集 → 💡 智能体处理 → 📋 报告生成 → 🖥️ 浏览器展示
 ```
 
-### 分层处理管道
+### 分层处理管道💫
 
 1. **📊 数据采集层**：并行执行多分析工具（Pyinstrument、Memray、Python Tutor、AST解析）
 2. **💡 智能分析层**：AI智能体综合解读，识别优化机会
 3. **💡 建议生成层**：生成具体代码修改方案
 4. **💬 交互响应层**：处理用户反馈与对话请求
 
-### 数据流流程
+### 数据流流程💥
 
 ```
 📄 原始代码
@@ -173,7 +176,7 @@ deeptracer script.py -a
     → 📋 最终输出
 ```
 
-## 🔧 工具链说明
+## 🔧 工具链说明🧐
 
 | 工具类型 | 使用工具 | 负责功能 |
 |---------|----------|----------|
@@ -184,7 +187,7 @@ deeptracer script.py -a
 
 ## 📖 开发指南
 
-### 编码规范
+### 编码规范🫣
 
 1. **文件编码**：所有文件必须使用UTF-8编码
 2. **文件操作**：所有文件的open必须显式标注encoding='utf-8'
@@ -197,7 +200,7 @@ def function(element:int)->int:
     return 1
 ```
 
-### 贡献流程
+### 贡献流程🤗
 
 1. 提交Issue汇报问题或功能建议
 2. Fork仓库并创建特性分支
@@ -205,19 +208,25 @@ def function(element:int)->int:
 4. 提交Pull Request，说明功能变更
 5. 代码审查通过后合并
 
-### 测试说明
+### 测试说明🤤
 
 - **测试框架**：pytest
 - **测试目录**：`test/`目录下按模块组织测试用例
 - **本地测试**：`test_local/`目录下存放本地测试用例
 
-## 🙏 致谢
+## 🙏 致谢🤗
 
-- [Pyinstrument](https://github.com/joerick/pyinstrument)：性能分析工具
-- [Memray](https://github.com/bloomberg/memray)：内存分析工具
-- [Python Tutor](https://github.com/pgbovine/OnlinePythonTutor)：执行可视化工具
-- [Coze](https://www.coze.com/)：智能体平台
-
+- [Pyinstrument](https://github.com/joerick/pyinstrument)：性能分析工具🥳
+- [Memray](https://github.com/bloomberg/memray)：内存分析工具👾
+- [Python Tutor](https://github.com/hcientist/OnlinePythonTutor)：执行可视化工具👻
+- [cozepy](https://github.com/coze-dev/coze-py)：智能体平台🤖
+- [python-dotenv](https://github.com/theskumar/python-dotenv):加载环境变量😤
+- [objprint](https://github.com/gaogaotiantian/objprint):打印Python对象以人类可读格式😈
+- [tqdm](https://github.com/tqdm/tqdm):进度条😇
+- [pyvis](https://github.com/WestHealth/pyvis):可视化网络🧩
+- [networkx](https://github.com/networkx/networkx):网络分析🎲
+- [fastapi](https://github.com/fastapi/fastapi):后端核心工具🚀
+- [uvicorn](https://github.com/Kludex/uvicorn):启动app服务💥
 ---
 
 ## 📞 联系方式
