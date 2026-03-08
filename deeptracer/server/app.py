@@ -20,6 +20,7 @@ def start(astAnalyer,memoryAnalayer,speedAnalyer,workflow):
     # 读取模板和挂载文件
     @app.get("/")
     async def index(request:Request):
+        # TODO:补充模板填充以及前端代码
         return templates.TemplateResponse(
             "index.html",
             {
@@ -28,7 +29,7 @@ def start(astAnalyer,memoryAnalayer,speedAnalyer,workflow):
         )
 
     uvicorn.run(
-        "deeptracer.main:app",
+        app=app,
         host="127.0.0.1",
         port=8000,
         log_level="info",
