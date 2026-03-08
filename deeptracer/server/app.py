@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 from deeptracer import DEEPTRACER_DEV_ROOT
 import os
+from typing import Any
 
 def start(astAnalyer,memoryAnalayer,speedAnalyer,workflow):
     app = FastAPI(
@@ -18,16 +19,29 @@ def start(astAnalyer,memoryAnalayer,speedAnalyer,workflow):
     app.mount("/static",StaticFiles(directory=static_path),name="static")
     templates = Jinja2Templates(directory=templates_path)
     # 读取模板和挂载文件
-    @app.get("/")
+    @app.get("/",response_class=HTMLResponse, summary="前端页面入口")
     async def index(request:Request):
         # TODO:补充模板填充以及前端代码
-        return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
-            }
-        )
-
+        try:
+            return templates.TemplateResponse(
+                "index.html",
+                {
+                    "request": request,
+                }
+            )
+        except Exception:
+            HTMLResponse(content="<h1>404 - 文件不存在</h1>", status_code=404)
+    @app.get("/{full_path:path}", response_class=HTMLResponse)
+    async def catch_all(request: Request, full_path: Any = None):
+        try:
+            return templates.TemplateResponse(
+                "index.html",
+                {
+                    "request": request,
+                }
+            )
+        except Exception:
+            HTMLResponse(content="<h1>404 - 文件不存在</h1>", status_code=404)
     uvicorn.run(
         app=app,
         host="127.0.0.1",
