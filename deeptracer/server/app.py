@@ -7,7 +7,7 @@ from deeptracer import DEEPTRACER_DEV_ROOT
 import os
 from typing import Any
 
-def start(astAnalyer,memoryAnalayer,speedAnalyer,workflow):
+def start(astAnalyer,speedAnalyer,workflow):
     app = FastAPI(
         title="deeptracer",
         description="link body",

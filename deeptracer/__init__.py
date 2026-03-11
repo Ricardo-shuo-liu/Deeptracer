@@ -4,40 +4,53 @@ import platform
 import subprocess
 
 
-def is_color_supported()->bool:
+def _is_color_supported() -> bool:
     """
     检测当前环境是否支持颜色输出
     
     Args:
         None
-    Return:
-        result(bool):判断是不是支持颜色输出
+    Returns:
+        result(bool): 判断是否支持颜色输出
     """
-    #先判断是否为交互式终端
+    # 非交互式终端直接不支持
     if not sys.stdout.isatty():
         return False
-    #先判断是否是Windows
+    
+    # Windows系统处理
     if sys.platform.startswith("win"):
-        # Windows系统：检查版本是否≥10.0.10586
         try:
             # 获取Windows版本号
             win_version = platform.version()
-            major, minor, build = map(int, win_version.split("."))
-            # Windows 10及以上且版本号≥10586才支持ANSI
-            return (major >= 10 and build >= 10586)
-        except:
+            major, _, build = map(int, win_version.split("."))
+            if not (major >= 10 and build >= 10586):
+                return False
+            from ctypes import windll, WinError
+            # 主动开启Windows终端ANSI支持
+            kernel32 = windll.kernel32
+            handle = kernel32.GetStdHandle(-11)  # STD_OUTPUT_HANDLE
+            if handle != 0:
+                kernel32.SetConsoleMode(handle, 7)
+            return True
+        # 明确捕获可能的异常类型 避免吞掉关键错误
+        except (ValueError, AttributeError, WinError, OSError):
             return False
+    # Linux/macOS系统处理
     else:
-        # 非Windows系统：检查终端是否是交互式且支持颜色
         try:
-            # 用tput检测颜色支持（Linux/macOS）
-            result = subprocess.check_output(["tput", "colors"], stderr=subprocess.DEVNULL)
-    # tput 输出是字节串，转成整数
+            # 检测颜色支持
+            result = subprocess.check_output(
+                ["tput", "colors"], 
+                stderr=subprocess.DEVNULL,
+                text=True
+            )
             color_count = int(result.strip())
-            is_color_supported = color_count >= 8  # 通常 >=8 表示支持彩色
-            return is_color_supported
-        except:
-            return False  
+            return color_count >= 8
+        # 明确捕获tput相关异常
+        except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+            return False 
+        
+color_support = _is_color_supported()
 def print_color(text:str,
                 fore_color:str=None,
                 back_color:str=None,
@@ -59,7 +72,7 @@ def print_color(text:str,
         
     "本函数只支持linux,macos,window10+使用"
     """
-    if not is_color_supported():
+    if not color_support():
         # 不支持颜色，直接输出原始文本
         print(text)
         return

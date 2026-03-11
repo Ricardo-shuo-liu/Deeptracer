@@ -10,6 +10,7 @@ from deeptracer import(
     speedAnalyer,
     workflow
 )
+from deeptracer.server import start
 def main()->None:
     """
     deeptracer的api命令行接口实现代码检测的调度    
