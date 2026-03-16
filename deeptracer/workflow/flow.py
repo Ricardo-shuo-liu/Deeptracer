@@ -21,6 +21,8 @@ import tempfile
 import threading
 from tqdm.auto import tqdm
 import json
+from deeptracer.workflow.env_utils import build_env_local
+
 
 os.environ.pop('HTTP_PROXY', None)
 os.environ.pop('HTTPS_PROXY', None)
@@ -40,10 +42,6 @@ class get_env_messgae():
     Methods:
         None
     """
-
-
-    def __init__(self)->None:
-        pass
     @classmethod
     def get_coze_api_token(self,
                            workspace_id: Optional[str] = "7579550904685707316")->str:
@@ -178,8 +176,6 @@ class _fileChange():
     Methods:
         None
     """
-    def __init__(self)->None:
-        pass
     def _toTxt(self,
                filePath:str,
                savePath:str="deeptracer/agentCoze/activityFilesTXT"
@@ -295,7 +291,6 @@ class Flow():
                  htmlPath:str=None,
                  txtPath:str=None,
                  open:bool=False,
-                 configPath:str = "deeptracer/workflow/.env.local",
                  cachePath:str = "deeptracer/workflow/activityFilesTXT",
                  save_path:str = "deeptracer/reports/agentReply.json"
                  )->None:
@@ -315,8 +310,12 @@ class Flow():
         self.savePath = os.path.join(DEEPTRACER_DEV_ROOT,save_path)
         self.open = open
         self._REQUEST_DONE = False
-        config_Path = os.path.join(DEEPTRACER_DEV_ROOT,configPath)
-        load_dotenv(config_Path)#配置环境变量
+        builder = build_env_local()
+        path = builder.get_config_path()
+        if os.path.exists(path):
+            load_dotenv()#配置环境变量
+        else:
+            raise FileNotFoundError("你应该要配置key才能使用agent服务!")
         if self.open:
             fileF = _fileChange()
             self.files_paths = {
@@ -672,39 +671,12 @@ class Flow():
                 prompt=prompt,
                 prompt_path=prompt_path
             )
-        self._load_json(result=result)  
+        return self._to_json(result=result)
 
-    def  _load_json(self,
-                    result:str
-                    )->None:
-        """
-        将输出结果存储为json文件
-        
-        Args:
-            result(str): agent 返回结果
-        Returns:
-            None
-        """
-        if os.path.exists(self.savePath):
-            try:
-                # 直接删除非空文件夹（核心函数）
-                os.remove(self.savePath)
-            except Exception as e:
-                raise FileExistsError(f"{e}")
-        
-        result_dict = self._to_json(result)
-        with open(self.savePath,"w") as fp:
-            json.dump(
-                      obj=result_dict,
-                      fp=fp,
-                      indent=4,
-                      ensure_ascii=False
-                      )
-            
+    
     def _to_json(self,
                  result:str
                  )->dict:
-        
         """
         将输出结果转化为符合json的格式
         

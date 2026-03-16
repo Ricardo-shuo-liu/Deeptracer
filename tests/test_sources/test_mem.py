@@ -1,26 +1,24 @@
-# test_mem.py
+# test_with_memory.py - 包含大量内存占用，用于测试分析效果
 import time
 
-def create_large_list():
-    # 分配大列表（占用内存）
-    large_data = [i for i in range(10_000_000)]  # 约 80MB 内存
-    return large_data
+# 1. 创建大列表（占用明显内存）
+large_list = [i for i in range(100000)]  # 约几百KB内存
+print(f"大列表长度：{len(large_list)}")
 
-def leak_memory():
-    # 模拟内存泄漏：全局变量持有对象，不释放
-    global leaked_data
-    leaked_data = []
-    for i in range(5_000_000):
-        leaked_data.append({"key": i, "value": str(i)})  # 约 400MB 内存
+# 2. 创建大字典
+large_dict = {f"key_{i}": [j for j in range(100)] for i in range(1000)}
+print(f"大字典键数量：{len(large_dict)}")
 
-def main():
-    print("开始运行测试脚本...")
-    # 正常分配 + 释放
-    normal_data = create_large_list()
-    del normal_data  # 释放内存
-    time.sleep(1)
-    
-    # 模拟泄漏
-    leak_memory()
-    time.sleep(2)
-    print("脚本运行完成（内存泄漏未释放）")
+# 3. 循环占用内存（延长执行时间，确保快照能捕获）
+temp_list = []
+for i in range(5000):
+    temp_list.append(f"test_string_{i}" * 10)
+    time.sleep(0.001)  # 轻微延时，确保内存被统计
+
+# 4. 计算总和（触发内存使用）
+total = sum(large_list)
+print(f"大列表总和：{total}")
+
+# 5. 手动保留变量（避免被GC回收）
+del temp_list[:500]  # 部分删除，保留剩余数据
+

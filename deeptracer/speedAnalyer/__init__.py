@@ -1,4 +1,4 @@
-from deeptracer.speedAnalyer.viztracer import *
+from .viztracer import SpeedAnalyzer
 
 __all__ = [
     "SpeedAnalyzer"
