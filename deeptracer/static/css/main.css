@@ -1,0 +1,446 @@
+/* Deeptracer 主样式文件 */
+
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+    color: #333;
+}
+
+/* 主容器 */
+.deeptracer-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部Tab栏 */
+.deeptracer-tabs {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #e4e7ed;
+    padding: 0 20px;
+    height: 60px;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.deeptracer-tab {
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    color: #606266;
+}
+
+.deeptracer-tab:hover {
+    color: #409EFF;
+}
+
+.deeptracer-tab.active {
+    color: #409EFF;
+    border-bottom: 2px solid #409EFF;
+    font-weight: 500;
+}
+
+/* 内容区域 */
+.deeptracer-content {
+    flex: 1;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Diff + PyTutor 布局 */
+.deeptracer-diff-pytutor {
+    display: flex;
+    height: 100%;
+    gap: 20px;
+}
+
+.deeptracer-left-column {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.deeptracer-diff {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.deeptracer-editor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 0;
+}
+
+/* 右侧PyTutor区域 */
+.deeptracer-right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.deeptracer-diff-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e4e7ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+}
+
+.deeptracer-diff-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.deeptracer-diff-buttons .el-button {
+    margin: 0;
+}
+
+.deeptracer-diff-header h3 {
+    font-size: 18px;
+    color: #303133;
+    margin: 0;
+}
+
+.deeptracer-diff-body {
+    flex: 1;
+    overflow: auto;
+    padding: 0;
+}
+
+.deeptracer-diff-line {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.deeptracer-diff-line:hover {
+    background: #f5f7fa;
+}
+
+.deeptracer-diff-line.added {
+    background: #f0f9eb;
+    border-left: 3px solid #67C23A;
+}
+
+.deeptracer-diff-line.deleted {
+    background: #fef0f0;
+    border-left: 3px solid #F56C6C;
+}
+
+.deeptracer-diff-line.modified {
+    background: #f0f5ff;
+    border-left: 3px solid #409EFF;
+}
+
+.deeptracer-diff-line.unchanged {
+    background: white;
+}
+
+/* 已确认的行样式 - 完全恢复正常 */
+.deeptracer-diff-line.confirmed {
+    background: white;
+    border-left: none;
+}
+
+.deeptracer-confirmed-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background-color: #f0f9eb;
+    color: #67C23A;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 修改行的样式 */
+.deeptracer-diff-modified {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.deeptracer-diff-modified-content {
+    flex: 1;
+    width: 100%;
+}
+
+.deeptracer-diff-original {
+    padding: 4px 0;
+    color: #F56C6C;
+}
+
+.deeptracer-diff-new {
+    padding: 4px 0;
+    color: #67C23A;
+}
+
+.deeptracer-diff-label {
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.deeptracer-diff-line-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.deeptracer-diff-line-number {
+    width: 40px;
+    text-align: right;
+    margin-right: 15px;
+    color: #909399;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.deeptracer-diff-line-text {
+    flex: 1;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.deeptracer-diff-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+/* 原生单选按钮组样式 */
+.deeptracer-radio-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.deeptracer-radio-label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    padding: 6px 12px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    transition: all 0.3s;
+    background-color: #fff;
+}
+
+.deeptracer-radio-label:hover {
+    border-color: #409EFF;
+}
+
+.deeptracer-radio-label input[type="radio"] {
+    margin: 0;
+    margin-right: 6px;
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+}
+
+.deeptracer-radio-label input[type="radio"]:checked + .deeptracer-radio-text {
+    color: #409EFF;
+    font-weight: 500;
+}
+
+.deeptracer-radio-label:has(input[type="radio"]:checked) {
+    border-color: #409EFF;
+    background-color: #ecf5ff;
+}
+
+.deeptracer-radio-text {
+    font-size: 14px;
+    color: #606266;
+    transition: all 0.3s;
+}
+
+.deeptracer-info-btn {
+    color: #909399;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.deeptracer-info-btn:hover {
+    color: #409EFF;
+    transform: scale(1.1);
+}
+
+.deeptracer-diff-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #909399;
+    font-size: 16px;
+}
+
+
+
+.deeptracer-editor-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e4e7ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+}
+
+.deeptracer-editor-header h3 {
+    font-size: 18px;
+    color: #303133;
+    margin: 0;
+}
+
+.deeptracer-editor-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.deeptracer-editor-body {
+    flex: 1;
+    padding: 15px;
+}
+
+.deeptracer-editor-textarea {
+    width: 100%;
+    height: 300px;
+    padding: 15px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    resize: vertical;
+    line-height: 1.5;
+    background: #f8f9fa;
+}
+
+.deeptracer-editor-textarea:focus {
+    outline: none;
+    border-color: #409EFF;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+/* 右侧 PyTutor 区域 */
+.deeptracer-right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.deeptracer-pytutor-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* AST 可视化区域 */
+.deeptracer-ast {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.deeptracer-ast-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Pyinstrument 性能分析区域 */
+.deeptracer-pyinstrument {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.deeptracer-pyinstrument-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 原因弹窗 */
+.deeptracer-reason-content {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #606266;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .deeptracer-diff-pytutor {
+        flex-direction: column;
+    }
+
+    .deeptracer-diff,
+    .deeptracer-pytutor {
+        width: 100%;
+        height: 50%;
+    }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

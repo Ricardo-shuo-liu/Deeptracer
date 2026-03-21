@@ -72,7 +72,7 @@ def print_color(text:str,
         
     "本函数只支持linux,macos,window10+使用"
     """
-    if not color_support():
+    if not color_support:
         # 不支持颜色，直接输出原始文本
         print(text)
         return

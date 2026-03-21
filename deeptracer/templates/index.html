@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Deeptracer - 代码分析与可视化工具</title>
+    <!-- 引入Vue2 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+    <!-- 引入Element UI -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/theme-chalk/index.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/index.js"></script>
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div id="app" class="deeptracer-container">
+        <!-- 顶部Tab栏 -->
+        <div class="deeptracer-tabs">
+            {% raw %}
+            <div 
+                v-for="tab in tabs" 
+                :key="tab.name"
+                :class="['deeptracer-tab', { active: activeTab === tab.name }]"
+                @click="activeTab = tab.name"
+            >
+                {{ tab.label }}
+            </div>
+            {% endraw %}
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="deeptracer-content">
+            <!-- Diff + PyTutor 页面 -->
+            {% raw %}
+            <div v-if="activeTab === 'diff-pytutor'" class="deeptracer-diff-pytutor">
+                <!-- 左侧列：Diff + 编辑器 -->
+                <div class="deeptracer-left-column">
+                    <!-- 代码Diff对比 -->
+                    <div class="deeptracer-diff">
+                        <div class="deeptracer-diff-header">
+                            <h3>代码Diff对比</h3>
+                            <div class="deeptracer-diff-buttons">
+                                <el-button 
+                                    v-if="!allConflictsConfirmed"
+                                    type="primary" 
+                                    size="medium"
+                                    @click="confirmAllSelections" 
+                                    :disabled="!allChangesSelected"
+                                >
+                                    确认所有选择
+                                </el-button>
+                                <el-button 
+                                    v-if="allConflictsConfirmed"
+                                    type="success" 
+                                    size="medium"
+                                    @click="copyMergedCode"
+                                >
+                                    一键复制合并代码
+                                </el-button>
+                                <el-button 
+                                    v-if="allConflictsConfirmed"
+                                    type="warning" 
+                                    size="medium"
+                                    @click="applySelections"
+                                >
+                                    进入编辑模式
+                                </el-button>
+                            </div>
+                        </div>
+                        <div v-if="workflowData.original_code && workflowData.modified_code" class="deeptracer-diff-body">
+                            <div 
+                                v-for="(line, index) in diffResult" 
+                                :key="index"
+                                :class="['deeptracer-diff-line', line.type]"
+                            >
+                                <!-- 无变化的行 -->
+                                <div v-if="line.type === 'unchanged'" class="deeptracer-diff-line-content">
+                                    <span class="deeptracer-diff-line-number">{{ line.lineNumber }}</span>
+                                    <span class="deeptracer-diff-line-text">{{ line.content }}</span>
+                                </div>
+                                
+                                <!-- 修改的行 -->
+                                <div v-else-if="line.type === 'modified'" class="deeptracer-diff-modified">
+                                    <div class="deeptracer-diff-line-content">
+                                        <span class="deeptracer-diff-line-number">{{ line.originalLineNum }}</span>
+                                        <div class="deeptracer-diff-original">
+                                            <span class="deeptracer-diff-label">原代码:</span>
+                                            <span class="deeptracer-diff-line-text">{{ line.originalContent }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="deeptracer-diff-line-content">
+                                        <span class="deeptracer-diff-line-number">{{ line.modifiedLineNum }}</span>
+                                        <div class="deeptracer-diff-new">
+                                            <span class="deeptracer-diff-label">新代码:</span>
+                                            <span class="deeptracer-diff-line-text">{{ line.modifiedContent }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="deeptracer-diff-actions">
+                                        <div class="deeptracer-radio-group">
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="keep_modified"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">保留新代码</span>
+                                            </label>
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="keep_original"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">保留原代码</span>
+                                            </label>
+                                        </div>
+                                        <el-button 
+                                            v-if="!confirmedSelections[index]"
+                                            size="small" 
+                                            @click="confirmSelection(index)"
+                                            type="success"
+                                            :disabled="!changeSelections[index]"
+                                        >
+                                            确认
+                                        </el-button>
+                                        <span v-else class="deeptracer-confirmed-badge">✓ 已确认</span>
+                                        <el-tooltip content="查看修改原因" placement="top">
+                                            <el-button 
+                                                size="small" 
+                                                @click="showModifyReason(index)"
+                                                type="text"
+                                                icon="el-icon-info"
+                                                circle
+                                            >
+                                            </el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                                
+                                <!-- 删除的行 -->
+                                <div v-else-if="line.type === 'deleted'" class="deeptracer-diff-line-content">
+                                    <span class="deeptracer-diff-line-number">{{ line.lineNumber }}</span>
+                                    <span class="deeptracer-diff-line-text">{{ line.content }}</span>
+                                    <div class="deeptracer-diff-actions">
+                                        <div class="deeptracer-radio-group">
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="keep"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">保留</span>
+                                            </label>
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="delete"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">删除</span>
+                                            </label>
+                                        </div>
+                                        <el-button 
+                                            v-if="!confirmedSelections[index]"
+                                            size="small" 
+                                            @click="confirmSelection(index)"
+                                            type="success"
+                                            :disabled="!changeSelections[index]"
+                                        >
+                                            确认
+                                        </el-button>
+                                        <span v-else class="deeptracer-confirmed-badge">✓ 已确认</span>
+                                        <el-tooltip content="查看删除原因" placement="top">
+                                            <el-button 
+                                                size="small" 
+                                                @click="showModifyReason(index)"
+                                                type="text"
+                                                icon="el-icon-info"
+                                                circle
+                                            >
+                                            </el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                                
+                                <!-- 新增的行 -->
+                                <div v-else-if="line.type === 'added'" class="deeptracer-diff-line-content">
+                                    <span class="deeptracer-diff-line-number">{{ line.lineNumber }}</span>
+                                    <span class="deeptracer-diff-line-text">{{ line.content }}</span>
+                                    <div class="deeptracer-diff-actions">
+                                        <div class="deeptracer-radio-group">
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="apply"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">替换</span>
+                                            </label>
+                                            <label class="deeptracer-radio-label">
+                                                <input 
+                                                    type="radio" 
+                                                    :name="'radio-' + index" 
+                                                    value="skip"
+                                                    v-model="changeSelections[index]"
+                                                    @change="onSelectionChange(index)"
+                                                    :disabled="confirmedSelections[index]"
+                                                >
+                                                <span class="deeptracer-radio-text">不替换</span>
+                                            </label>
+                                        </div>
+                                        <el-button 
+                                            v-if="!confirmedSelections[index]"
+                                            size="small" 
+                                            @click="confirmSelection(index)"
+                                            type="success"
+                                            :disabled="!changeSelections[index]"
+                                        >
+                                            确认
+                                        </el-button>
+                                        <span v-else class="deeptracer-confirmed-badge">✓ 已确认</span>
+                                        <el-tooltip content="查看新增原因" placement="top">
+                                            <el-button 
+                                                size="small" 
+                                                @click="showModifyReason(index)"
+                                                type="text"
+                                                icon="el-icon-info"
+                                                circle
+                                            >
+                                            </el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="deeptracer-diff-empty">
+                            无代码修改
+                        </div>
+                    </div>
+
+                    <!-- 编辑器区域 -->
+                    <div v-if="editMode" class="deeptracer-editor">
+                        <div class="deeptracer-editor-header">
+                            <h3>代码编辑器</h3>
+                            <div class="deeptracer-editor-buttons">
+                                <el-button type="primary" @click="applyEditorCode">
+                                    应用到PyTutor
+                                </el-button>
+                                <el-button @click="exitEditMode">
+                                    退出编辑
+                                </el-button>
+                            </div>
+                        </div>
+                        <div class="deeptracer-editor-body">
+                            <textarea 
+                                v-model="editorCode" 
+                                class="deeptracer-editor-textarea"
+                                placeholder="编辑代码..."
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧列：PyTutor -->
+                <div class="deeptracer-right-column">
+                    <iframe 
+                        :src="pytutorUrl" 
+                        class="deeptracer-pytutor-iframe"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+
+            <!-- AST可视化页面 -->
+            <div v-if="activeTab === 'ast'" class="deeptracer-ast">
+                <iframe 
+                    :srcdoc="astHtml" 
+                    class="deeptracer-ast-iframe"
+                    frameborder="0"
+                    allowfullscreen
+                ></iframe>
+            </div>
+
+            <!-- Pyinstrument性能分析页面 -->
+            <div v-if="activeTab === 'pyinstrument'" class="deeptracer-pyinstrument">
+                <iframe 
+                    :srcdoc="pyinstrumentHtml" 
+                    class="deeptracer-pyinstrument-iframe"
+                    frameborder="0"
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
+
+        <!-- 原因查看弹窗 -->
+        <el-dialog
+            title="修改原因"
+            :visible.sync="reasonDialogVisible"
+            width="50%"
+        >
+            <div v-html="currentReason"></div>
+        </el-dialog>
+        {% endraw %}
+    </div>
+
+    <!-- 全局变量注入 -->
+    <script>
+        // 从FastAPI传入的变量
+        const workflow_data = {{ workflow_data | tojson | safe }};
+        const py_file_code = {{ py_file_code | tojson | safe }};
+        const ast_html = {{ ast_html | tojson | safe }};
+        const pyinstrument_html = {{ pyinstrument_html | tojson | safe }};
+    </script>
+
+    <!-- 引入Diff逻辑 -->
+    <script src="/static/js/diff.js"></script>
+    <!-- 引入PyTutor逻辑 -->
+    <script src="/static/js/pytutor.js"></script>
+    <!-- 引入主逻辑 -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
