@@ -9,11 +9,11 @@ build-backend = "setuptools.build_meta"
 name = "deeptracer"
 version = "0.2.0b1"
 requires-python = ">=3.10.9"
-authors = [{name = "Ricardo", email = "13838152117@139.com"},
-            {name = "qscoder23"，email = ""},
-            {name = "ha12300"，email = ""},
-            {name = "Amber-deal"，email = ""},
-            {name = "Mantianxiaoyou"，email = ""}]
+authors = [{name = "Ricardo-shuo-liu", email = "13838152117@139.com"},
+            {name = "qscoder23"，email = "qiansan13@gmail.com"},
+            {name = "ha12300"，email = "2814109264@qq.com"},
+            {name = "Amber-deal"，email = "1909861589@qq.com"},
+            {name = "Mantianxiaoyou"，email = "a111112222333445a@163.com"}]
 readme = "README.md"
 # 核心依赖
 dependencies = [
