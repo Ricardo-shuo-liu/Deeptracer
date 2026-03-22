@@ -3,7 +3,6 @@
 [![Python >3.10.9](https://img.shields.io/badge/python-%3E3.10.9-blue.svg)](https://www.python.org/downloads/)
 [![Code Analysis](https://img.shields.io/badge/功能-代码分析-blueviolet.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
 [![Performance Analysis](https://img.shields.io/badge/功能-性能分析-green.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
-[![Memory Analysis](https://img.shields.io/badge/功能-内存分析-orange.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
 [![AI Refactoring](https://img.shields.io/badge/功能-智能重构-purple.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
 
 ---
@@ -43,45 +42,41 @@ Deeptracer 是一个 🤖 AI驱动的智能代码分析与重构平台，通过�
 - **功能**：函数调用时间分析、调用关系可视化、性能瓶颈检测
 - **输出**：JSON格式跟踪数据，可交互时间线
 
-### 3. 🧠 内存分析模块
-
-- **使用工具**：Memray
-- **功能**：内存分配跟踪、内存泄漏检测、内存使用热力图
-- **输出**：HTML格式内存报告，可视化内存使用情况
-
-### 4. 🤖 智能重构建议
+### 3. 🤖 智能重构建议
 
 - **AI驱动**：基于Coze智能体平台的深度代码理解
 - **具体可执行**：Git风格diff界面展示修改建议
 - **技术解释**：每个建议附带技术原理说明和修改影响评估
 - **交互控制**：接受/拒绝单个重构建议，批量应用选中修改
 
-### 5. 🖥️ 可视化界面
+### 4. 🖥️ 可视化界面
 
 - **三窗口布局**：
   - 📈 分析可视化窗口：性能时间线、执行流程、代码结构的多标签视图
-  - 💻 代码重构窗口：Git风格diff界面，智能重构建议与交互控制
+  - 💻 代码重构窗口：diff界面，智能重构建议与交互控制
   - 💬 智能体对话窗口：技术解释与自然语言交互界面
 - **交互特性**：自由拖拽调整的窗口分割，响应式布局适配
 
 ## 🛠️ 技术栈
 
 ### 前端
-
-- React 18 + TypeScript
-- Vite（构建工具）
-- React Split Panes（窗口布局）
-- Monaco Editor（代码编辑器）
-- ECharts（图表可视化）
-- Tailwind CSS（样式框架）
+- **核心框架**：Vue.js 2.6.14（数据驱动视图、状态管理、事件绑定）
+- **UI组件库**：Element UI 2.15.13（按钮、弹窗、提示、Tooltip等现成组件）
+- **基础技术**：
+  - HTML5（语义化标签、iframe嵌入第三方可视化内容）
+  - CSS3（Flex布局、响应式设计、自定义滚动条、媒体查询）
+  - JavaScript（ES6+语法、Promise异步、剪贴板API、自定义Diff算法）
+- **交互能力**：
+  - 自定义代码Diff对比逻辑（区分新增/删除/修改/未变更行）
+  - Python Tutor iframe集成（代码执行可视化）
+  - 响应式布局（大屏左右分栏、小屏上下分栏）
 
 ### 后端
 
 - FastAPI（Web框架）
-- Python >3.10.9
+- Python >=3.10.9
 - 分析工具：
   - Pyinstrument（性能分析）
-  - Memray（内存分析）
   - Python Tutor（执行可视化）
   - AST模块（代码结构分析）
 - AI平台：Coze API集成
@@ -96,8 +91,7 @@ Deeptracer 是一个 🤖 AI驱动的智能代码分析与重构平台，通过�
 
 ### 环境要求
 
-- Python >3.10.9 (3.10.10+)
-- Node.js 16+
+- Python >=3.10.9 (3.10.9+)
 - 现代浏览器（Chrome/Firefox/Safari）
 
 ### 安装步骤
@@ -115,11 +109,6 @@ cd deeptracer
 pip install -e .
 ```
 
-3. **安装前端依赖**
-
-```bash
-npm install
-```
 
 ### 基本使用
 
@@ -181,7 +170,6 @@ deeptracer script.py -a
 | 工具类型 | 使用工具 | 负责功能 |
 |---------|----------|----------|
 | 性能分析 | Pyinstrument | 函数调用时间分析、性能瓶颈检测 |
-| 内存分析 | Memray | 内存分配跟踪、内存泄漏检测 |
 | 执行可视化 | Python Tutor | 执行流程、变量状态变化 |
 | 代码结构分析 | AST模块 | 代码结构解析、抽象语法树生成 |
 
@@ -191,7 +179,7 @@ deeptracer script.py -a
 
 1. **文件编码**：所有文件必须使用UTF-8编码
 2. **文件操作**：所有文件的open必须显式标注encoding='utf-8'
-3. **Python版本**：统一使用Python >3.10.9开发
+3. **Python版本**：统一使用Python >=3.10.9开发
 4. **函数定义**：使用类型注解和文档字符串
 
 ```python
@@ -217,16 +205,16 @@ def function(element:int)->int:
 ## 🙏 致谢🤗
 
 - [Pyinstrument](https://github.com/joerick/pyinstrument)：性能分析工具🥳
-- [Memray](https://github.com/bloomberg/memray)：内存分析工具👾
-- [Python Tutor](https://github.com/hcientist/OnlinePythonTutor)：执行可视化工具👻
+- [Python Tutor](https://pythontutor.com/)：执行可视化工具👻
 - [cozepy](https://github.com/coze-dev/coze-py)：智能体平台🤖
 - [python-dotenv](https://github.com/theskumar/python-dotenv):加载环境变量😤
-- [objprint](https://github.com/gaogaotiantian/objprint):打印Python对象以人类可读格式😈
 - [tqdm](https://github.com/tqdm/tqdm):进度条😇
 - [pyvis](https://github.com/WestHealth/pyvis):可视化网络🧩
 - [networkx](https://github.com/networkx/networkx):网络分析🎲
 - [fastapi](https://github.com/fastapi/fastapi):后端核心工具🚀
 - [uvicorn](https://github.com/Kludex/uvicorn):启动app服务💥
+- [Vue.js](https://vuejs.org/)：前端核心框架✨
+- [Element UI](https://element.eleme.io/#/zh-CN)：前端UI组件库🎨
 ---
 
 ## 📞 联系方式
