@@ -1,10 +1,9 @@
-# Deeptracer - 🤖 Intelligent Code Analysis & Refactoring Platform 🚀
+# Deeptracer - 🤖 An Intelligent Code Analysis & Refactoring Platform 🚀
 
 [![Python >3.10.9](https://img.shields.io/badge/python-%3E3.10.9-blue.svg)](https://www.python.org/downloads/)
-[![Code Analysis](https://img.shields.io/badge/Feature-Code%20Analysis-blueviolet.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
-[![Performance Analysis](https://img.shields.io/badge/Feature-Performance%20Analysis-green.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
-[![Memory Analysis](https://img.shields.io/badge/Feature-Memory%20Analysis-orange.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
-[![AI Refactoring](https://img.shields.io/badge/Feature-AI%20Refactoring-purple.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![Code Analysis](https://img.shields.io/badge/Feature-Code_Analysis-blueviolet.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![Performance Analysis](https://img.shields.io/badge/Feature-Performance_Analysis-green.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
+[![AI Refactoring](https://img.shields.io/badge/Feature-AI_Refactoring-purple.svg)](https://github.com/Ricardo-shuo-liu/deeptracer)
 
 ---
 
@@ -14,74 +13,70 @@
 
 ## 📋 Project Overview
 
-Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform. It provides professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀.
+Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀.
 
 ### 🌟 Core Values
 
-- **🧠 Intelligent Analysis**: Combines local tools and cloud agents to deliver in-depth code insights
+- **🧠 Intelligent Analysis**: Combines local tools and cloud agents to provide in-depth code insights
 - **📊 Multi-dimensional Visualization**: Intuitive display of performance, memory, and execution flow
-- **💡 AI Refactoring Suggestions**: AI-generated concrete and actionable code optimization plans
-- **🎨 User-friendly Interface**: Three adjustable panes, Git-style diff interface
+- **💡 Smart Refactoring Suggestions**: AI-generated concrete and actionable code optimization plans
+- **🎨 User-friendly Interface**: Resizable three-pane layout with Git-style diff interface
 - **🔒 Secure Execution Environment**: Code sandbox configuration with resource limit protection
 
-### 📌 Roadmap
+### 📌 Version Roadmap
 
-- **MVP Version**: Focus on core analysis pipeline and basic refactoring features
-- **Full Version**: Extend with advanced features such as intelligent chat and dynamic updates
+- **MVP Version**: Focus on core analysis workflows and basic refactoring features
+- **Full Version**: Extend advanced features such as intelligent dialogue and dynamic updates
 
 ## ✨ Core Features
 
 ### 1. 🔍 Code Analysis Module
 
-- **AST Structure Analysis**: Parses code into abstract syntax trees, identifies patterns and potential issues
+- **AST Structure Analysis**: Parses code to generate abstract syntax trees, identifying code patterns and potential issues
 - **Execution Flow Visualization**: Displays execution traces and variable state changes based on Python Tutor
 - **Code Quality Assessment**: Detects common code issues and optimization opportunities
 
 ### 2. ⚡ Performance Analysis Module
 
-- **Tools Used**: Pyinstrument
-- **Features**: Function call time analysis, call graph visualization, performance bottleneck detection
-- **Output**: JSON trace data, interactive timeline
+- **Tool Used**: Pyinstrument
+- **Features**: Function call time analysis, call relationship visualization, performance bottleneck detection
+- **Output**: JSON-formatted trace data with interactive timeline
 
-### 3. 🧠 Memory Analysis Module
+### 3. 🤖 AI Refactoring Suggestions
 
-- **Tools Used**: Memray
-- **Features**: Memory allocation tracking, memory leak detection, memory usage heatmap
-- **Output**: HTML memory report, visual memory usage breakdown
+- **AI-driven**: Deep code understanding based on the Coze agent platform
+- **Concrete & Actionable**: Git-style diff interface to display modification suggestions
+- **Technical Explanations**: Each suggestion includes technical principles and impact assessments
+- **Interactive Control**: Accept/reject individual refactoring suggestions, apply selected changes in bulk
 
-### 4. 🤖 Intelligent Refactoring Suggestions
-
-- **AI-driven**: Deep code understanding powered by the Coze agent platform
-- **Concrete & Actionable**: Modifications displayed in a Git-style diff interface
-- **Technical Explanations**: Each suggestion includes principles and impact assessment
-- **Interactive Control**: Accept/reject individual suggestions, apply selected changes in batches
-
-### 5. 🖥️ Visual Interface
+### 4. 🖥️ Visual Interface
 
 - **Three-pane Layout**:
-  - 📈 Analysis Visualization Pane: Multi-tab view for performance timeline, execution flow, and code structure
-  - 💻 Code Refactoring Pane: Git-style diff interface with smart refactoring suggestions and controls
-  - 💬 Agent Chat Pane: Technical explanations and natural language interaction
-- **Interactive Features**: Draggable and resizable panes, responsive layout
+  - 📈 Analysis Visualization Pane: Multi-tab view for performance timelines, execution flows, and code structures
+  - 💻 Code Refactoring Pane: Diff interface with smart refactoring suggestions and interactive controls
+  - 💬 Agent Dialogue Pane: Technical explanations and natural language interaction interface
+- **Interactive Features**: Freely draggable pane resizing, responsive layout adaptation
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-
-- React 18 + TypeScript
-- Vite (build tool)
-- React Split Panes (layout)
-- Monaco Editor (code editor)
-- ECharts (visualization)
-- Tailwind CSS (styling)
+- **Core Framework**: Vue.js 2.6.14 (data-driven view rendering, state management, event binding)
+- **UI Component Library**: Element UI 2.15.13 (pre-built components like buttons, dialogs, tooltips, etc.)
+- **Foundational Technologies**:
+  - HTML5 (semantic tags, iframe embedding for third-party visualizations)
+  - CSS3 (Flexbox layout, responsive design, custom scrollbars, media queries)
+  - JavaScript (ES6+ syntax, Promise async operations, Clipboard API, custom Diff algorithm)
+- **Interactive Capabilities**:
+  - Custom code Diff comparison logic (classifying lines as added/deleted/modified/unchanged)
+  - Python Tutor iframe integration (code execution visualization)
+  - Responsive layout (side-by-side panes on large screens, stacked panes on small screens)
 
 ### Backend
 
 - FastAPI (web framework)
 - Python >3.10.9
 - Analysis Tools:
-  - Pyinstrument (performance)
-  - Memray (memory)
+  - Pyinstrument (performance profiling)
   - Python Tutor (execution visualization)
   - AST module (code structure analysis)
 - AI Platform: Coze API integration
@@ -94,47 +89,40 @@ Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platf
 
 ## 📦 Installation & Usage
 
-### Requirements
+### Prerequisites
 
-- Python >3.10.9 (3.10.10+)
-- Node.js 16+
-- Modern browser (Chrome / Firefox / Safari)
+- Python >=3.10.9 (3.10.9+)
+- Modern web browser (Chrome/Firefox/Safari)
 
-### Installation
+### Installation Steps
 
-1. **Clone the repository**
+1. **Clone the Repository**
 
 ```bash
 git clone <repository-url>
 cd deeptracer
 ```
 
-2. **Install Python dependencies**
+2. **Install Python Dependencies**
 
 ```bash
 pip install -e .
 ```
 
-3. **Install frontend dependencies**
-
-```bash
-npm install
-```
-
 ### Basic Usage
 
-#### CLI
+#### Command-line Interface
 
 ```bash
 # Configure your Coze key
 deeptracer --key yourKeys
 
-# Basic analysis
+# Basic analysis command
 deeptracer script.py
 
 # Enable full AST visualization
 deeptracer script.py --all
-# Short form
+# Or use the short form
 deeptracer script.py -a
 ```
 
@@ -145,95 +133,96 @@ deeptracer script.py -a
   - `COZE_BOT_ID`: Coze bot ID
   - `COZE_WORKFLOW_ID`: Coze workflow ID
 
-- **Config File**:
-  - `~/.deeptracer/.env.local`: Local configuration
+- **Configuration File**:
+  - `~/.deeptracer/.env.local`: Local configuration file
 
 ## 🏗️ System Architecture
 
 ### Overall Architecture
 
 ```
-🤖 User CLI Input → 🚀 Analysis Engine → 📊 Data Collection → 💡 Agent Processing → 📋 Report Generation → 🖥️ Browser Display
+🤖 User CLI Input → 🚀 Analysis Engine → 📊 Data Collection → 💡 Agent Processing → 📋 Report Generation → 🖥️ Browser Rendering
 ```
 
 ### Layered Processing Pipeline 💫
 
-1. **📊 Data Collection Layer**: Runs multiple analyzers in parallel (Pyinstrument, Memray, Python Tutor, AST parsing)
-2. **💡 Intelligent Analysis Layer**: AI agent synthesizes insights and identifies optimization opportunities
+1. **📊 Data Collection Layer**: Executes multiple analysis tools in parallel (Pyinstrument, Memray, Python Tutor, AST parsing)
+2. **💡 Intelligent Analysis Layer**: AI agent synthesizes insights to identify optimization opportunities
 3. **💡 Suggestion Generation Layer**: Generates concrete code modification plans
-4. **💬 Interactive Response Layer**: Handles user feedback and chat requests
+4. **💬 Interactive Response Layer**: Handles user feedback and dialogue requests
 
 ### Data Flow 💥
 
 ```
-📄 Raw Code
-    → 🚀 Parallel analysis execution
-    → 📊 Unified data format
-    → 💡 Agent processing
-    → 💡 Structured suggestions
-    → 🖥️ Frontend dynamic rendering
-    → 💬 User interaction
-    → 📋 Final output
+📄 Original Code
+    → 🚀 Parallel Analysis Tool Execution
+    → 📊 Unified Data Format
+    → 💡 Agent Processing
+    → 💡 Structured Suggestions
+    → 🖥️ Frontend Dynamic Rendering
+    → 💬 User Interaction
+    → 📋 Final Output
 ```
 
 ## 🔧 Toolchain 🧐
 
-| Type         | Tool         | Responsibility                          |
-|--------------|--------------|-----------------------------------------|
-| Performance  | Pyinstrument | Function timing, bottleneck detection   |
-| Memory       | Memray       | Allocation tracking, leak detection     |
-| Execution    | Python Tutor | Step tracing, variable state changes   |
-| Code Structure | AST       | Parsing, abstract syntax tree generation|
+| Tool Type       | Tool Used       | Responsible Function                                  |
+|-----------------|-----------------|--------------------------------------------------------|
+| Performance     | Pyinstrument    | Function call time analysis, performance bottleneck detection |
+| Execution Vis   | Python Tutor    | Execution flow visualization, variable state tracking |
+| Code Structure  | AST Module      | Code structure parsing, abstract syntax tree generation |
 
 ## 📖 Development Guide
 
-### Code Style 🫣
+### Coding Standards 🫣
 
-1. **Encoding**: All files must use UTF-8
-2. **File I/O**: All `open` calls must explicitly set `encoding='utf-8'`
-3. **Python Version**: Developed for Python >3.10.9
-4. **Functions**: Use type annotations and docstrings
+1. **File Encoding**: All files must use UTF-8 encoding
+2. **File I/O**: All file `open` operations must explicitly specify `encoding='utf-8'`
+3. **Python Version**: Develop exclusively with Python >=3.10.9
+4. **Function Definitions**: Use type hints and docstrings
 
 ```python
 def function(element: int) -> int:
-    """Return 1 (explain the function purpose!)"""
+    """Returns 1 (Explain the function's purpose!)"""
     return 1
 ```
 
-### Contribution Flow 🤗
+### Contribution Workflow 🤗
 
-1. Open an Issue to report bugs or propose features
-2. Fork the repo and create a feature branch
-3. Implement and test your changes
-4. Submit a Pull Request with a clear description
-5. Merge after code review
+1. Submit an Issue to report bugs or propose features
+2. Fork the repository and create a feature branch
+3. Implement the feature and write tests
+4. Submit a Pull Request describing the changes
+5. Merge after code review approval
 
 ### Testing 🤤
 
-- **Framework**: pytest
-- **Test Directory**: Tests organized by module under `test/`
-- **Local Tests**: Local test cases in `test_local/`
+- **Test Framework**: pytest
+- **Test Directory**: `test/` organized by module
+- **Local Tests**: `test_local/` for local test cases
 
 ## 🙏 Acknowledgments 🤗
 
-- [Pyinstrument](https://github.com/joerick/pyinstrument): Performance profiler 🥳
-- [Memray](https://github.com/bloomberg/memray): Memory profiler 👾
-- [Python Tutor](https://github.com/hcientist/OnlinePythonTutor): Execution visualizer 👻
+- [Pyinstrument](https://github.com/joerick/pyinstrument): Performance profiling tool 🥳
+- [Python Tutor](https://pythontutor.com/): Execution visualization tool 👻
 - [cozepy](https://github.com/coze-dev/coze-py): AI agent platform 🤖
-- [python-dotenv](https://github.com/theskumar/python-dotenv): Environment variables 😤
-- [objprint](https://github.com/gaogaotiantian/objprint): Human-readable object printing 😈
+- [python-dotenv](https://github.com/theskumar/python-dotenv): Environment variable loader 😤
 - [tqdm](https://github.com/tqdm/tqdm): Progress bar 😇
 - [pyvis](https://github.com/WestHealth/pyvis): Network visualization 🧩
 - [networkx](https://github.com/networkx/networkx): Network analysis 🎲
-- [fastapi](https://github.com/fastapi/fastapi): Backend core 🚀
-- [uvicorn](https://github.com/Kludex/uvicorn): App server 💥
+- [fastapi](https://github.com/fastapi/fastapi): Backend core framework 🚀
+- [uvicorn](https://github.com/Kludex/uvicorn): ASGI server for app deployment 💥
+- [Vue.js](https://vuejs.org/): Frontend core framework ✨
+- [Element UI](https://element.eleme.io/#/en-US): Frontend UI component library 🎨
 
 ---
 
 ## 📞 Contact
 
-For questions or feedback, feel free to open an Issue or contact us via email.
+For questions or suggestions, please reach out via Issue or email.
 
 ---
 
 **🚀 Most importantly, have fun!** 🎉
+
+---
