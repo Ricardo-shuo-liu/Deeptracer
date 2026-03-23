@@ -15,7 +15,7 @@ authors = [
     { name = "Mantianxiaoyou", email = "a111112222333445a@163.com" }
 ]
 readme = "README.md"
-description = "Deeptracer is an AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction."
+description = "Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀."
 urls.Homepage = "https://github.com/Ricardo-shuo-liu/Deeptracer"
 urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
 
