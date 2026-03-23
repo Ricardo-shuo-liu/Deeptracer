@@ -7,28 +7,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deeptracer"
-version = "0.2.0b1"
-requires-python = ">=3.10.9"
-authors = [{name = "Ricardo-shuo-liu", email = "13838152117@139.com"},
-            {name = "qscoder23"，email = "qiansan13@gmail.com"},
-            {name = "ha12300"，email = "2814109264@qq.com"},
-            {name = "Amber-deal"，email = "1909861589@qq.com"},
-            {name = "Mantianxiaoyou"，email = "a111112222333445a@163.com"}]
-readme = "README.md"
-# 核心依赖
+
+version = "0.1.0"
+
+requires-python = ">3.10.9"
+
 dependencies = [
-    "cozepy>=0.20.0",
+    "cozepy>=0.20.0 ",
     "python-dotenv>=1.2.1",
+    "objprint>=0.3.0",
     "tqdm>=4.67.1",
     "pyvis>=0.3.2",
     "networkx>=3.4.2",
     "pyinstrument>=5.1.1",
     "fastapi>=0.135.1",
-    "uvicorn>=0.41.0"
+    "uvicorn>=0.41.0",
+    "pydantic>=2.10.0",
+    "langchain>=0.3.0",
+    "langgraph>=0.2.0",
+    "langchain-openai>=0.3.0"
 ]
-description = "Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀."
-urls.Homepage = "https://github.com/Ricardo-shuo-liu/Deeptracer"
-urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
 
 #配置deeptracer主模块搜索
 [tool.setuptools.packages.find]
@@ -45,18 +43,8 @@ dev = [
     "black==24.1.0",
     "isort==5.12.0"
 ]
-[tool.setuptools]
-packages.find = { 
-    where = ["."],         
-    include = ["deeptracer*"],   
-    exclude = ["tests*"]   
-}
-include-package-data = true
-[tool.setuptools.package-data] 
-deeptracer = [
-    "static/**/*",
-    "templates/**/*"
-]
+
 # 设置终端输入映射
 [project.scripts]
 deeptracer = "deeptracer.clip:main"
+deeptracer-web = "deeptracer.server.app:main"
