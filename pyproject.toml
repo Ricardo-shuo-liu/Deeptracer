@@ -22,6 +22,7 @@ urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
 dependencies = [
     "cozepy>=0.20.0",
     "python-dotenv>=1.2.1",
+    "memray>=1.19.1",
     "tqdm>=4.67.1",
     "pyvis>=0.3.2",
     "networkx>=3.4.2",
@@ -43,10 +44,8 @@ exclude = ["tests*"]
 dev = [
     "pytest>=9.0.2",
     "pytest-cov",
-    "flake8",
     "pre-commit",
-    "black==24.1.0",
-    "isort==5.12.0"
+    "ruff>=0.4.10"
 ]
 
 [tool.setuptools]
@@ -60,3 +59,28 @@ deeptracer = [
 
 [project.scripts]
 deeptracer = "deeptracer.clip:main"
+deeptracer-web = "deeptracer.server.app:main"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    "venv",
+    "test",
+    "test_local",
+    "deeptracer/viztracer_source_config",
+    "deeptracer/tutor_source_config"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E203"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
