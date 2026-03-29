@@ -12,6 +12,7 @@ def build_frontend_response(state: dict[str, Any]) -> dict[str, Any]:
     memory = state.get("memory_result", {})
     refactor = state.get("refactor_result", {})
     teaching = state.get("teaching_result", {})
+    chat = state.get("chat_result",{})
 
     analysis_map = local_analysis["analysisMap"]
     analysis_map["ast"]["summary"] = structure.get("summary", analysis_map["ast"]["summary"])
@@ -36,6 +37,8 @@ def build_frontend_response(state: dict[str, Any]) -> dict[str, Any]:
         "suggestions": refactor.get("suggestions", local_analysis.get("suggestions", [])),
         "stages": local_analysis["stages"],
         "teaching": teaching,
+        "chat": chat,
+        "conversation_history": state.get("conversation_history",[]),
         "meta": {
             **local_analysis.get("meta", {}),
             "taskId": state["task_id"],
