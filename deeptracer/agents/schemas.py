@@ -40,3 +40,15 @@ class TeachingAgentResult(BaseModel):
     overview: str = Field(description="Beginner-friendly overall explanation.")
     beginner_tip: str = Field(description="Practical tip for a beginner.")
     next_step: str = Field(description="Best next action for the user.")
+
+
+class ChatMessage(BaseModel):
+    role: str = Field(description="Role of the message sender (user/assistant).")
+    content: str = Field(description="Content of the message.")
+
+
+class ChatAgentResult(BaseModel):
+    discussion: str = Field(description="Discussion about the code analysis and suggestions.")
+    questions: list[str] = Field(description="Questions to ask the user for clarification.")
+    next_steps: list[str] = Field(description="Recommended next steps for code improvement.")
+    conversation_history: list[ChatMessage] = Field(description="Conversation history.")
