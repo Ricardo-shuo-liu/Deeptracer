@@ -12,6 +12,7 @@ from deeptracer.agents import (
     run_refactor_agent,
     run_structure_agent,
     run_teaching_agent,
+    run_chat_agent,
 )
 from deeptracer.graph.response_builder import build_frontend_response
 from deeptracer.graph.state import AnalysisState
@@ -63,6 +64,21 @@ def teaching_node(state: AnalysisState) -> dict:
     }
 
 
+def chat_node(state: AnalysisState) -> dict:
+    return {
+        "chat_result": run_chat_agent(
+            state["code"],
+            state["structure_result"],
+            state["performance_result"],
+            state["memory_result"],
+            state["refactor_result"],
+            state["teaching_result"],
+            state.get("user_input", ""),
+            state.get("conversation_history", [])
+        )
+    }
+
+
 def response_node(state: AnalysisState) -> dict:
     return {"final_response": build_frontend_response(state)}
 
@@ -75,6 +91,7 @@ def build_analysis_graph():
     graph.add_node("memory", memory_node)
     graph.add_node("refactor", refactor_node)
     graph.add_node("teaching", teaching_node)
+    graph.add_node("chat", chat_node)
     graph.add_node("response", response_node)
 
     graph.add_edge(START, "local_tools")
@@ -83,7 +100,8 @@ def build_analysis_graph():
     graph.add_edge("performance", "memory")
     graph.add_edge("memory", "refactor")
     graph.add_edge("refactor", "teaching")
-    graph.add_edge("teaching", "response")
+    graph.add_edge("teaching", "chat")
+    graph.add_edge("chat", "response")
     graph.add_edge("response", END)
     return graph.compile()
 
@@ -93,7 +111,13 @@ def get_analysis_graph():
     return build_analysis_graph()
 
 
-def run_analysis_graph(code: str, path_text: str | None = None) -> dict:
+def run_analysis_graph(
+    code: str, 
+    path_text: str | None = None, 
+    user_input: str = "", 
+    conversation_history: list = None
+) -> dict:
+    
     state: AnalysisState = {
         "code": code,
         "task_id": str(uuid4()),
@@ -101,15 +125,35 @@ def run_analysis_graph(code: str, path_text: str | None = None) -> dict:
     }
     if path_text:
         state["path_text"] = path_text
+    if user_input:
+        state["user_input"] = user_input
+    if conversation_history:
+        state["conversation_history"] = conversation_history
     result = get_analysis_graph().invoke(state)
     return result["final_response"]
 
 
-def run_analysis_graph_for_input(path_text: str | None = None, source_code: str | None = None) -> dict:
+def run_analysis_graph_for_input(
+    path_text: str | None = None, 
+    source_code: str | None = None, 
+    user_input: str = "", 
+    conversation_history: list = None
+) -> dict:
+    
     if source_code and source_code.strip():
-        return run_analysis_graph(code=source_code, path_text=path_text)
+        return run_analysis_graph(
+            code=source_code, 
+            path_text=path_text,
+            user_input=user_input,
+            conversation_history=conversation_history
+        )
     if path_text:
         target = Path(path_text).expanduser()
         code = target.read_text(encoding="utf-8")
-        return run_analysis_graph(code=code, path_text=path_text)
+        return run_analysis_graph(
+            code=code, 
+            path_text=path_text,
+            user_input=user_input,
+            conversation_history=conversation_history
+        )
     raise ValueError("Missing required field: code or path")
