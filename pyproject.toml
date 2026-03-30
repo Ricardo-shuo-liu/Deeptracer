@@ -22,7 +22,6 @@ urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
 dependencies = [
     "cozepy>=0.20.0",
     "python-dotenv>=1.2.1",
-    "memray>=1.19.1",
     "tqdm>=4.67.1",
     "pyvis>=0.3.2",
     "networkx>=3.4.2",
@@ -60,6 +59,7 @@ deeptracer = [
 [project.scripts]
 deeptracer = "deeptracer.clip:main"
 deeptracer-web = "deeptracer.server.app:main"
+# 这个暂且保留
 
 [tool.ruff]
 line-length = 88
