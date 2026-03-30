@@ -1,96 +1,174 @@
-from fastapi import FastAPI,Request
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-import uvicorn
-from deeptracer import DEEPTRACER_DEV_ROOT
+from __future__ import annotations
+
+import json
 import os
 from typing import Any
 
-def start(astAnalyer_html,speedAnalyer_html,workflowJson,originCode):
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+from deeptracer import DEEPTRACER_DEV_ROOT
+from deeptracer.graph.workflow import run_analysis_graph_for_input
+from deeptracer.server.pytutor_service import (
+    execute_python_tutor_trace,
+    get_pytutor_static_dir,
+    is_pytutor_available,
+)
+
+
+HOST = "127.0.0.1"
+PORT = 8000
+
+
+def create_app() -> FastAPI:
     app = FastAPI(
         title="deeptracer",
-        description="link body",
+        description="Python code analysis workspace",
     )
-    # 创建节点
-    static_path = os.path.join(DEEPTRACER_DEV_ROOT,"deeptracer/static")
-    templates_path = os.path.join(DEEPTRACER_DEV_ROOT,"deeptracer/templates")
-    # 获得路径
-    app.mount("/static",StaticFiles(directory=static_path),name="static")
+
+    static_path = os.path.join(DEEPTRACER_DEV_ROOT, "deeptracer", "static")
+    templates_path = os.path.join(DEEPTRACER_DEV_ROOT, "deeptracer", "templates")
+    os.makedirs(static_path, exist_ok=True)
+    os.makedirs(templates_path, exist_ok=True)
+
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
+    if is_pytutor_available():
+        app.mount(
+            "/tutor-assets",
+            StaticFiles(directory=str(get_pytutor_static_dir())),
+            name="tutor-assets",
+        )
     templates = Jinja2Templates(directory=templates_path)
-    # 读取模板和挂载文件
-    @app.get("/",response_class=HTMLResponse, summary="前端页面入口")
-    async def index(request:Request):
+
+    @app.get("/", response_class=HTMLResponse, summary="Web workspace")
+    async def index(request: Request):
         try:
-            print(f"Templates directory: {templates_path}")
-            print(f"Template file exists: {os.path.exists(os.path.join(templates_path, 'index.html'))}")
-            
-            # 从参数提取数据
-            py_file_code = originCode or '# 测试代码\ndef hello():\n    print("Hello, World!")\n\nhello()'
-            if workflowJson:
-                workflow_data = workflowJson
-            else:
-                workflow_data = {
-                    'py_file_code': py_file_code,
-                    'original_code': 'def hello():\n    print("Hello")\n\nhello()',
-                    'modified_code': 'def hello():\n    print("Hello, World!")\n\nhello()',
-                    'modify_reason': '添加了", World!"字符串，使输出更完整'
-                }
-            ast_html = astAnalyer_html or '<div style="padding: 20px; text-align: center;">AST可视化内容</div>'
-            pyinstrument_html = speedAnalyer_html or '<div style="padding: 20px; text-align: center;">Pyinstrument性能分析内容</div>'
-            
-            print(f"Data prepared: py_file_code={py_file_code[:50]}..., workflow_data={workflow_data.keys()}")
-            
-            return templates.TemplateResponse(
-                "index.html",
-                {
-                    "request": request,
-                    "workflow_data": workflow_data,
-                    "py_file_code": py_file_code,
-                    "ast_html": ast_html,
-                    "pyinstrument_html": pyinstrument_html
-                }
+            return templates.TemplateResponse("index.html", {"request": request})
+        except Exception:
+            return HTMLResponse(content="<h1>404 - File Not Found</h1>", status_code=404)
+
+    @app.post("/api/analyze", summary="Analyze Python code with the LangGraph workflow")
+    async def analyze(payload: dict[str, str]):
+        target_path = (payload.get("path") or "").strip()
+        source_code = payload.get("code") or ""
+        if not target_path and not source_code.strip():
+            raise HTTPException(status_code=400, detail="Missing required field: code or path")
+
+        try:
+            return run_analysis_graph_for_input(
+                path_text=target_path or None,
+                source_code=source_code or None,
             )
-        except Exception as e:
-            print(f"Error: {e}")
-            import traceback
-            traceback.print_exc()
-            return HTMLResponse(content="<h1>404 - 文件不存在</h1>", status_code=404)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Analysis failed: {exc}") from exc
+
+    @app.get("/api/tutor/status", summary="Check local Python Tutor availability")
+    async def tutor_status():
+        return {
+            "available": is_pytutor_available(),
+            "embedUrl": "/tutor/iframe-embed.html" if is_pytutor_available() else None,
+        }
+
+    @app.post("/api/tutor/trace", summary="Generate a Python Tutor trace for embedded rendering")
+    async def tutor_trace(payload: dict[str, Any]):
+        code = (payload.get("code") or "").strip()
+        if not code:
+            raise HTTPException(status_code=400, detail="Missing required field: code")
+
+        options = payload.get("options") or {}
+
+        try:
+            return JSONResponse(
+                execute_python_tutor_trace(
+                    user_script=code,
+                    raw_input_json=json.dumps(payload.get("rawInput", []), ensure_ascii=False),
+                    options_json=json.dumps(options, ensure_ascii=False),
+                )
+            )
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Python Tutor execution failed: {exc}") from exc
+
+    @app.get("/tutor/iframe-embed.html", response_class=HTMLResponse, summary="Minimal local Python Tutor frame")
+    async def tutor_iframe():
+        if not is_pytutor_available():
+            raise HTTPException(status_code=404, detail="Python Tutor local runtime is not available.")
+
+        return HTMLResponse(
+            content="""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepTracer Tutor Embed</title>
+  <script src="/tutor-assets/build/iframe-embed.bundle.js?5f90f543ad" charset="utf-8"></script>
+  <style>
+    html, body {
+      margin: 0;
+      background: #f7f9fc;
+      overflow: hidden;
+    }
+    #vizDiv, #frontendErrorOutput {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="vizDiv"></div>
+  <div id="frontendErrorOutput"></div>
+</body>
+</html>"""
+        )
+
+    @app.get("/tutor/web_exec_py3.py", summary="Local Python Tutor Python 3 execution")
+    async def tutor_exec_py3(
+        user_script: str,
+        raw_input_json: str = "[]",
+        options_json: str = "{}",
+    ):
+        try:
+            payload = execute_python_tutor_trace(
+                user_script=user_script,
+                raw_input_json=raw_input_json,
+                options_json=options_json,
+            )
+            return JSONResponse(payload)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Python Tutor execution failed: {exc}") from exc
+
     @app.get("/{full_path:path}", response_class=HTMLResponse)
     async def catch_all(request: Request, full_path: Any = None):
         try:
-            # 从参数提取数据
-            py_file_code = originCode or '# 测试代码\ndef hello():\n    print("Hello, World!")\n\nhello()'
-            if workflowJson:
-                workflow_data = workflowJson
-            else:
-                workflow_data = {
-                    'py_file_code': py_file_code,
-                    'original_code': 'def hello():\n    print("Hello")\n\nhello()',
-                    'modified_code': 'def hello():\n    print("Hello, World!")\n\nhello()',
-                    'modify_reason': '添加了", World!"字符串，使输出更完整'
-                }
-            ast_html = astAnalyer_html or '<div style="padding: 20px; text-align: center;">AST可视化内容</div>'
-            pyinstrument_html = speedAnalyer_html or '<div style="padding: 20px; text-align: center;">Pyinstrument性能分析内容</div>'
-            
-            return templates.TemplateResponse(
-                "index.html",
-                {
-                    "request": request,
-                    "workflow_data": workflow_data,
-                    "py_file_code": py_file_code,
-                    "ast_html": ast_html,
-                    "pyinstrument_html": pyinstrument_html
-                }
-            )
-        except Exception as e:
-            print(f"Error: {e}")
-            return HTMLResponse(content="<h1>404 - 文件不存在</h1>", status_code=404)
+            return templates.TemplateResponse("index.html", {"request": request})
+        except Exception:
+            return HTMLResponse(content="<h1>404 - File Not Found</h1>", status_code=404)
+
+    return app
+
+
+def main() -> None:
     uvicorn.run(
-        app=app,
-        host="127.0.0.1",
-        port=8000,
+        app=create_app(),
+        host=HOST,
+        port=PORT,
         log_level="info",
     )
+
+
+def start(astAnalyer=None, speedAnalyer=None, workflow=None) -> None:
+    # Keep backward compatibility with the original server entrypoint.
+    main()
+
+
 if __name__ == "__main__":
-    start(None,None,{},None)
+    main()
