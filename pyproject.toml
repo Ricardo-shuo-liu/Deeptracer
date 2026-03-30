@@ -1,24 +1,21 @@
 #基本环境和依赖配置
+
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0","wheel"]
 build-backend = "setuptools.build_meta"
+#配置项目名以及基本信息
 
 [project]
 name = "deeptracer"
 version = "0.2.0b1"
 requires-python = ">=3.10.9"
-authors = [
-    { name = "Ricardo-shuo-liu", email = "13838152117@139.com" },
-    { name = "qscoder23", email = "qiansan13@gmail.com" },
-    { name = "ha12300", email = "2814109264@qq.com" },
-    { name = "Amber-deal", email = "1909861589@qq.com" },
-    { name = "Mantianxiaoyou", email = "a111112222333445a@163.com" }
-]
+authors = [{name = "Ricardo-shuo-liu", email = "13838152117@139.com"},
+            {name = "qscoder23"，email = "qiansan13@gmail.com"},
+            {name = "ha12300"，email = "2814109264@qq.com"},
+            {name = "Amber-deal"，email = "1909861589@qq.com"},
+            {name = "Mantianxiaoyou"，email = "a111112222333445a@163.com"}]
 readme = "README.md"
-description = "Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀."
-urls.Homepage = "https://github.com/Ricardo-shuo-liu/Deeptracer"
-urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
-
+# 核心依赖
 dependencies = [
     "cozepy>=0.20.0",
     "python-dotenv>=1.2.1",
@@ -27,60 +24,39 @@ dependencies = [
     "networkx>=3.4.2",
     "pyinstrument>=5.1.1",
     "fastapi>=0.135.1",
-    "uvicorn>=0.41.0",
-    "pydantic>=2.10.0",
-    "langchain>=0.3.0",
-    "langgraph>=0.2.0",
-    "langchain-openai>=0.3.0"
+    "uvicorn>=0.41.0"
 ]
+description = "Deeptracer is an 🤖 AI-powered intelligent code analysis and refactoring platform that delivers professional code optimization solutions for developers through deep code understanding, multi-dimensional visual analysis, and natural language interaction 🚀."
+urls.Homepage = "https://github.com/Ricardo-shuo-liu/Deeptracer"
+urls."Bug Tracker" = "https://github.com/Ricardo-shuo-liu/Deeptracer/issues"
 
+#配置deeptracer主模块搜索
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["deeptracer*"]
-exclude = ["tests*"]
 
 [project.optional-dependencies]
+# 开发依赖，使用 `pip install .[dev]` 或 `pip install -e .[dev]`
 dev = [
     "pytest>=9.0.2",
     "pytest-cov",
+    "flake8",
     "pre-commit",
-    "ruff>=0.4.10"
+    "black==24.1.0",
+    "isort==5.12.0"
 ]
-
 [tool.setuptools]
+packages.find = { 
+    where = ["."],         
+    include = ["deeptracer*"],   
+    exclude = ["tests*"]   
+}
 include-package-data = true
-
-[tool.setuptools.package-data]
+[tool.setuptools.package-data] 
 deeptracer = [
     "static/**/*",
     "templates/**/*"
 ]
-
+# 设置终端输入映射
 [project.scripts]
 deeptracer = "deeptracer.clip:main"
-deeptracer-web = "deeptracer.server.app:main"
-# 这个暂且保留
-
-[tool.ruff]
-line-length = 88
-target-version = "py310"
-exclude = [
-    ".git",
-    "__pycache__",
-    "build",
-    "dist",
-    ".venv",
-    "venv",
-    "test",
-    "test_local",
-    "deeptracer/viztracer_source_config",
-    "deeptracer/tutor_source_config"
-]
-
-[tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = ["E203"]
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"

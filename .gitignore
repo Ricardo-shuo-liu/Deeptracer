@@ -93,7 +93,6 @@ venv.bak/
 # ========== IDE和编辑器 ==========
 # VS Code配置
 .vscode/
-.gitattributes
 
 # ========== 前端相关 ==========
 # 忽略Node.js依赖目录
